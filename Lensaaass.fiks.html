@@ -1,0 +1,455 @@
+<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Museum Virtual Penelitian Sosial – Kelas X</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#1b150f;--card:#fffaf0;--ink:#2b2118;--gold:#c9a24a;--red:#7a1f2b;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html,body{height:100%;margin:0;background:var(--bg);overflow:hidden;font-family:Nunito,system-ui,sans-serif;color:#fff}
+#c{position:fixed;inset:0;width:100%;height:100%;touch-action:none;cursor:grab}
+#top{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;display:flex;justify-content:space-between;gap:8px;padding:10px 14px;background:linear-gradient(#000a,#0000);pointer-events:none;font-size:14px}
+#top b{color:var(--gold);font-size:16px}
+#bot{position:fixed;bottom:env(safe-area-inset-bottom,0px);left:0;right:0;display:flex;align-items:flex-end;justify-content:space-between;gap:10px;padding:10px 14px}
+#nav{display:flex;gap:6px;overflow-x:auto;flex:1;padding-bottom:2px}
+button{font:inherit;cursor:pointer}
+.chip{white-space:nowrap;background:#000b;color:#fff;border:1px solid var(--gold);border-radius:20px;padding:8px 12px;font-size:13px}
+.chip.on{background:var(--gold);color:#000}
+#pad{display:grid;grid-template-columns:repeat(3,38px);gap:4px}
+#pad button{width:38px;height:38px;border-radius:8px;border:1px solid var(--gold);background:#000b;color:#fff}
+#hint{z-index:30;position:fixed;left:50%;top:56px;transform:translateX(-50%);background:#000b;border:1px solid var(--gold);border-radius:10px;padding:6px 12px;font-size:12px;text-align:center;pointer-events:none;max-width:88%}
+#m{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;padding:14px}
+.card{background:var(--card);color:var(--ink);border-radius:12px;border-top:8px solid var(--red);max-width:720px;width:100%;max-height:88%;overflow:auto;padding:18px 22px;position:relative;line-height:1.5;font-size:15px}
+#x{position:sticky;float:right;top:0;border:0;background:var(--red);color:#fff;border-radius:50%;width:32px;height:32px}
+.card h2{margin:0 0 8px;color:var(--red);font-family:Fredoka,sans-serif;font-weight:600;font-size:26px}.card h3{margin:14px 0 4px;font-family:Fredoka,sans-serif;font-weight:500;color:#5a3a22}.card ul,.card ol{margin:4px 0;padding-left:22px}
+.card table{border-collapse:collapse;width:100%;font-size:14px}.card td,.card th{border:1px solid #cdbf9f;padding:5px 7px;vertical-align:top;text-align:left}.card th{background:#efe3c6}
+.box{background:#f3e9d0;border-left:4px solid var(--gold);padding:8px 12px;margin:8px 0;border-radius:4px}
+.bar{background:#e3d6b8;border-radius:4px;margin:3px 0 8px}.bar i{display:block;background:var(--red);color:#fff;font-style:normal;font-size:12px;padding:2px 6px;border-radius:4px;white-space:nowrap}
+.card textarea,.card select,.card input[type=text],.card input[type=password]{width:100%;box-sizing:border-box;font:inherit;padding:6px;border:1px solid #b9a982;border-radius:6px;background:#fff;color:var(--ink)}
+.go{background:var(--red);color:#fff;border:0;border-radius:8px;padding:9px 16px;margin-top:8px}
+#rd{position:sticky;float:right;top:0;margin-right:8px;border:0;background:#1f4e8c;color:#fff;border-radius:16px;height:32px;padding:0 12px;font-size:13px}
+.ill{clear:both;margin:0 0 12px;border-radius:14px;overflow:hidden;border:3px solid var(--gold)}.ill svg{display:block;width:100%;height:auto;max-height:180px}
+#snd{position:fixed;top:calc(52px + env(safe-area-inset-top,0px));right:12px;display:flex;flex-direction:column;gap:6px}#snd button{width:40px;height:40px;border-radius:50%;border:1px solid var(--gold);background:#000b;color:#fff;font-size:18px}#snd .off{opacity:.4}
+.big{font:600 46px Fredoka,sans-serif;color:var(--red);line-height:1.1}.big small{font-size:18px;color:#5a3a22}.card a.go{display:inline-block;text-decoration:none}.card input[type=text],.card input[type=password]{margin:3px 0}.bar i{min-width:2.6em}
+#intro{position:fixed;left:0;right:0;bottom:96px;text-align:center;z-index:20;pointer-events:none;text-shadow:0 2px 8px #000}#intro .t{font:600 28px Fredoka,sans-serif;color:#ffd978}#intro button{pointer-events:auto;margin-top:8px;background:#000b;color:#fff;border:1px solid var(--gold);border-radius:20px;padding:7px 14px}
+#fd{position:fixed;inset:0;background:#000;opacity:0;transition:opacity .35s;pointer-events:none;z-index:25}</style></head><body>
+<canvas id="c"></canvas>
+<div id="top"><div><b>Museum Penelitian Sosial</b><br>Sosiologi Kelas X</div><div id="pr">Dikunjungi 0/14</div></div>
+<div id="hint">Geser layar untuk melihat sekeliling · Ketuk panel emas untuk membaca · WASD / ▲▼◀▶ untuk berjalan · naik tangga ke lantai 2</div>
+<div id="bot"><div id="nav"></div><div id="pad"><span></span><button data-k="u">▲</button><span></span><button data-k="l">◀</button><button data-k="d">▼</button><button data-k="r">▶</button></div></div>
+<div id="intro"><div class="t">Museum Penelitian Sosial</div><div>Berjalan menuju pintu masuk museum…</div><button id="sk" onclick="intro=0;$('#intro').style.display='none';go(0)">Lewati ▸</button></div><div id="fd"></div><div id="snd"><button id="bm" title="Musik">🎵</button><button id="bv" title="Suara pembaca">🗣️</button><button id="bl" title="Pilih suara">🌐</button><button id="bt" title="Ruang Guru">🎓</button></div>
+<div id="m"><div class="card"><button id="x">✕</button><button id="rd">🔊 Dengarkan</button><div id="mc"></div></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const ST=[[0,8,0,0],[-12,2,0,Math.PI/2],[12,2,0,-Math.PI/2],[0,-23,6,0],[11,-27,6,-Math.PI/2],[0,34,0,0]],NM=['Lobi','Ruang Langkah','Ruang Metode','Lantai 2: Data','Lantai 2: Kasus','Luar Museum'];
+const bar=(l,v)=>`${l}<div class="bar"><i style="width:${v}%">${v}%</i></div>`;
+const I=[
+{k:'LOBI',t:'Selamat Datang',s:'Tujuan belajar & cara menjelajah',c:'#7a1f2b',p:'L',z:0,h:`<h2>Selamat Datang di Museum Penelitian Sosial</h2><p>Kamu akan menjelajahi 5 ruang pamer. Di ruang terakhir kamu menjadi <b>peneliti</b> yang menganalisis 4 kasus nyata (2 kuantitatif, 2 kualitatif) plus 1 kasus gabungan.</p><h3>Tujuan Belajar</h3><ol><li>Menjelaskan pengertian, ciri, dan fungsi penelitian sosial.</li><li>Menyusun langkah-langkah penelitian sosial.</li><li>Membedakan metode kuantitatif dan kualitatif.</li><li>Memilih teknik pengumpulan data yang tepat.</li><li>Menganalisis kasus dan menarik kesimpulan secara etis.</li></ol><div class="box"><b>Petunjuk:</b> klik panel emas untuk membaca. Panel yang sudah dibaca berubah hijau. Gunakan tombol ruang di bawah untuk berpindah cepat.</div>`},
+{k:'LOBI',t:'Apa Itu Penelitian Sosial?',s:'Pengertian, ciri, dan fungsi',c:'#2e6f6a',p:'R',z:0,h:`<h2>Pengertian Penelitian Sosial</h2><p>Penelitian sosial adalah kegiatan <b>sistematis, terencana, dan objektif</b> untuk mengumpulkan serta menganalisis data tentang gejala atau masalah sosial agar dapat dipahami, dijelaskan, dan dicarikan solusinya.</p><h3>Ciri-ciri</h3><ul><li><b>Sistematis</b> – mengikuti tahapan yang runtut.</li><li><b>Empiris</b> – berdasarkan fakta lapangan, bukan opini.</li><li><b>Objektif</b> – bebas dari prasangka peneliti.</li><li><b>Logis & terverifikasi</b> – dapat diuji dan diulang orang lain.</li></ul><h3>Fungsi</h3><ul><li>Mendeskripsikan gejala sosial (apa yang terjadi).</li><li>Menjelaskan sebab-akibat (mengapa terjadi).</li><li>Memprediksi kecenderungan.</li><li>Memberi dasar kebijakan & pemecahan masalah.</li></ul><div class="box"><b>Contoh:</b> penelitian tentang pengaruh media sosial terhadap pergaulan remaja di sebuah sekolah.</div>`},
+{k:'RUANG LANGKAH',t:'Langkah Penelitian Sosial',s:'Dari masalah hingga laporan',c:'#8a5a14',p:'L',z:-11,h:`<h2>Langkah-Langkah Penelitian Sosial</h2><ol><li><b>Menentukan topik & masalah</b> – dekat dengan kehidupan, layak diteliti.</li><li><b>Merumuskan masalah & tujuan</b> – berbentuk pertanyaan jelas.</li><li><b>Kajian pustaka</b> – membaca teori dan penelitian sebelumnya.</li><li><b>Hipotesis / pertanyaan penelitian</b> – jawaban sementara (kuantitatif) atau fokus kajian (kualitatif).</li><li><b>Menentukan metode & instrumen</b> – populasi/sampel atau informan, alat pengumpul data.</li><li><b>Mengumpulkan data</b> di lapangan.</li><li><b>Menganalisis data</b>.</li><li><b>Menarik kesimpulan & menyusun laporan</b>.</li></ol><div class="box">Contoh rumusan masalah: “Bagaimana pola interaksi siswa saat istirahat setelah penggunaan gawai meningkat?”</div>`},
+{k:'RUANG LANGKAH',t:'Etika Penelitian',s:'Menghargai manusia yang diteliti',c:'#5b3a7a',p:'R',z:-11,h:`<h2>Etika Penelitian Sosial</h2><ul><li><b>Izin & informed consent</b> – responden tahu tujuan dan bersedia secara sukarela.</li><li><b>Kerahasiaan</b> – identitas disamarkan (inisial/nama samaran).</li><li><b>Tidak merugikan</b> – tidak mempermalukan atau membahayakan responden.</li><li><b>Kejujuran</b> – data tidak dimanipulasi.</li><li><b>Anti plagiarisme</b> – mencantumkan sumber.</li><li><b>Menghargai budaya</b> dan hak untuk berhenti kapan saja.</li></ul>`},
+{k:'RUANG METODE',t:'Metode Kuantitatif',s:'Angka, sampel, dan statistik',c:'#1f4e8c',p:'L',z:-22,h:`<h2>Metode Penelitian Kuantitatif</h2><p>Meneliti gejala sosial yang dapat <b>diukur dengan angka</b>, lalu dianalisis statistik untuk melihat pola dan hubungan.</p><ul><li>Pola pikir <b>deduktif</b>: teori → hipotesis → pembuktian data.</li><li>Memakai <b>populasi dan sampel</b> yang mewakili.</li><li>Instrumen terstruktur: <b>kuesioner/angket</b>, tes, skala.</li><li>Hasil dapat <b>digeneralisasi</b> pada populasi.</li><li>Penyajian: tabel, persentase, rata-rata, grafik.</li></ul><div class="box"><b>Contoh:</b> survei 100 siswa tentang lama penggunaan gawai per hari dan hasilnya disajikan dalam persen.</div><p><b>Kelebihan:</b> luas, objektif, mudah dibandingkan. <b>Kekurangan:</b> kurang menggali alasan dan makna.</p>`},
+{k:'RUANG METODE',t:'Metode Kualitatif',s:'Makna, konteks, dan pengalaman',c:'#a3422b',p:'R',z:-22,h:`<h2>Metode Penelitian Kualitatif</h2><p>Memahami <b>makna, pengalaman, dan proses</b> di balik perilaku sosial melalui data berupa kata, ucapan, dan perilaku.</p><ul><li>Pola pikir <b>induktif</b>: temuan lapangan → kesimpulan/teori.</li><li>Memakai <b>informan</b> yang dipilih sesuai kebutuhan (purposive).</li><li>Peneliti adalah <b>instrumen utama</b>.</li><li>Teknik: wawancara mendalam, observasi, dokumen.</li><li>Keabsahan data lewat <b>triangulasi</b> (membandingkan sumber/teknik).</li></ul><table><tr><th></th><th>Kuantitatif</th><th>Kualitatif</th></tr><tr><td>Data</td><td>Angka</td><td>Kata/deskripsi</td></tr><tr><td>Fokus</td><td>Seberapa banyak/luas</td><td>Mengapa & bagaimana</td></tr><tr><td>Subjek</td><td>Sampel besar</td><td>Informan terpilih</td></tr><tr><td>Hasil</td><td>Generalisasi</td><td>Pemahaman mendalam</td></tr></table>`},
+{k:'RUANG DATA',t:'Teknik Pengumpulan Data',s:'Observasi, wawancara, kuesioner, dokumen',c:'#2f6b3a',p:'L',z:-33,h:`<h2>Teknik Pengumpulan Data</h2><table><tr><th>Teknik</th><th>Penjelasan</th></tr><tr><td><b>Observasi</b></td><td>Mengamati langsung perilaku di lapangan memakai catatan/lembar pengamatan.</td></tr><tr><td><b>Wawancara</b></td><td>Tanya jawab dengan informan; terstruktur atau mendalam.</td></tr><tr><td><b>Kuesioner (angket)</b></td><td>Daftar pertanyaan tertulis untuk banyak responden.</td></tr><tr><td><b>Studi dokumen/pustaka</b></td><td>Menelaah arsip, catatan, data statistik, laporan.</td></tr><tr><td><b>FGD</b></td><td>Diskusi kelompok terarah untuk menggali pendapat bersama.</td></tr></table><div class="box">Gunakan <b>lebih dari satu teknik</b> agar data saling menguatkan (triangulasi).</div>`},
+{k:'RUANG DATA',t:'Analisis Data & Laporan',s:'Mengolah data menjadi kesimpulan',c:'#b0702a',p:'R',z:-33,h:`<h2>Analisis Data & Penyusunan Laporan</h2><h3>Data kuantitatif</h3><ol><li>Editing (memeriksa isian)</li><li>Tabulasi (merekap)</li><li>Hitung persentase/rata-rata</li><li>Sajikan tabel/grafik lalu tafsirkan</li></ol><h3>Data kualitatif</h3><ol><li><b>Reduksi</b> – memilih data penting</li><li><b>Penyajian</b> – narasi, kutipan, matriks</li><li><b>Penarikan kesimpulan</b> & verifikasi</li></ol><h3>Sistematika laporan</h3><p>Pendahuluan (latar, rumusan masalah, tujuan) → kajian pustaka → metode → hasil & pembahasan → kesimpulan & saran → daftar pustaka.</p>`},
+{k:'KASUS GABUNGAN',t:'Kasus: Kantin yang Sunyi',s:'SMA Harapan Bangsa (nama fiktif)',c:'#7a1f2b',get cf(){return KAN},get h(){return caseHtml(KAN)}}
+];
+// ---- 4 kasus tambahan + kasus gabungan
+const tb=(h,rows)=>`<table><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr>${rows.map(r=>`<tr>${r.map(x=>`<td>${x}</td>`).join('')}</tr>`).join('')}</table>`;
+const qt=(n,a)=>`<p><b>${n}:</b> ${a}</p>`;
+const KAN={id:'kantin',ab:'Gabungan',P:'campuran',T:['Kuesioner','Wawancara','Observasi','Studi dokumen'],tp:[/gawai|ponsel|smartphone|handphone|media sosial/,/interaksi|pergaulan|komunikasi|hubungan|sosial/],
+E:[/survei|angket|kuesioner|persen|%|\b(68|54|82|71)\b/,/wawancara|takut ketinggalan|canggung|kesepian|rani|dimas/,/observasi|menunduk|\b62\b|jumat|tanpa gawai/,/\bbk\b|konsultasi|omzet|arsip|dokumen/],
+pm:'Tepat – angka (seberapa luas) dan makna (mengapa) saling melengkapi.',ph:'ada data angka (A, D) sekaligus ucapan & perilaku (B, C).',
+pb:`<li><b>Rumusan masalah:</b> Bagaimana pengaruh penggunaan gawai terhadap pola interaksi tatap muka siswa SMA Harapan Bangsa saat istirahat, dan bagaimana siswa memaknainya?</li><li><b>Teknik:</b> A kuesioner (kuantitatif); B wawancara & C observasi (kualitatif); D studi dokumen.</li><li><b>Analisis:</b> A menunjukkan gejala <i>meluas</i> (68%, 54%). B menjelaskan <i>alasan</i> (takut ketinggalan info, canggung). C membuktikan perilaku nyata dan hari tanpa gawai membuat interaksi naik. D menguatkan dampak sosial (konsultasi BK naik, omzet turun). Data saling menguatkan (triangulasi).</li><li><b>Kesimpulan:</b> gawai ikut menurunkan interaksi tatap muka, tetapi bukan satu-satunya sebab (hati-hati: hubungan ≠ pasti sebab-akibat).</li><li><b>Saran:</b> zona/hari tanpa gawai rutin, kegiatan kelompok, pendampingan BK.</li><li><b>Etika:</b> izin sekolah, persetujuan responden, identitas disamarkan, tidak memaksa.</li>`};
+Object.assign(KAN,{t:'Kasus 5 (Gabungan): Kantin yang Sunyi',sc:'SMA Harapan Bangsa (nama fiktif)',st:'Dua tahun lalu kantin sekolah ramai oleh obrolan dan tawa. Kini siswa duduk berdekatan tetapi sibuk dengan gawai masing-masing. Kepala sekolah meminta tim peneliti (kamu!) meneliti <b>perubahan pola interaksi siswa saat jam istirahat</b>, memakai data angka sekaligus makna.',
+ev:[['Hasil angket 100 siswa kelas X–XII',bar('Membawa gawai ke sekolah',82)+bar('Lebih sering bermain gawai daripada mengobrol saat istirahat',68)+bar('Merasa lebih nyaman chat daripada bertemu langsung',71)+bar('Merasa teman dekat berkurang',54)+'<p>Rata-rata penggunaan gawai di sekolah: <b>3,5 jam/hari</b>.</p>'],
+['Kutipan wawancara siswa, guru BK, penjaga kantin',qt('Rani (siswa X)','“Kalau tidak buka grup kelas, takut ketinggalan info. Jadi di kantin ya sambil lihat HP.”')+qt('Dimas (siswa XI)','“Ngobrol langsung kadang canggung. Lewat chat lebih santai.”')+qt('Pak Budi (guru BK)','“Banyak anak datang curhat merasa kesepian padahal punya banyak kontak di media sosial.”')+qt('Bu Sari (penjaga kantin)','“Dulu anak-anak nongkrong lama. Sekarang beli lalu cepat pergi atau diam.”')],
+['Catatan observasi 5 hari (09.30–10.00)','<ul><li>Rata-rata <b>62%</b> siswa di kantin menunduk menatap gawai.</li><li>Kelompok yang bercanda bersama hanya 1–2 meja per hari.</li><li>Siswa sering duduk satu meja tetapi tidak saling berbicara.</li><li><b>Jumat (program “Istirahat Tanpa Gawai”):</b> kantin lebih ramai, siswa bermain kartu dan mengobrol.</li></ul>'],
+['Arsip BK & laporan kantin',tb(['Data','Dulu','Sekarang'],[['Konsultasi BK soal pertemanan/kesepian (per semester)',12,27],['Omzet kantin','100%','±70%'],['Aturan gawai','Boleh dibawa; penggunaan saat istirahat tidak diatur.','']])]]});
+const CASES=[
+{id:'k1',ab:'Kuan 1',jn:'KASUS KUANTITATIF 1',t:'Kasus 1 (Kuantitatif): Jam Belajar & Nilai',sc:'SMA Cahaya Ilmu (nama fiktif)',c:'#1f4e8c',
+st:'Guru Sosiologi menduga ada hubungan antara lama belajar mandiri di rumah dan nilai PTS siswa kelas X. Tim peneliti diminta membuktikannya dengan <b>data terukur dari 120 siswa</b>.',
+ev:[['Rekap nilai PTS (arsip sekolah)',tb(['Jam belajar/hari','Siswa','Rata-rata nilai'],[['< 1 jam',40,64],['1–2 jam',50,72],['> 2 jam',30,81]])],
+['Hasil angket 120 siswa',bar('Belajar mandiri setiap hari',45)+bar('Belajar hanya menjelang ujian',38)+bar('Bermain gawai/gim lebih dari 2 jam sehari',63)+'<p>Rata-rata belajar mandiri: <b>1,6 jam/hari</b>.</p>'],
+['Lembar pengamatan terstruktur (10 hari)','Pada jam pelajaran kosong, rata-rata <b>18 dari 36</b> siswa per kelas (50%) mengerjakan tugas; sisanya mengobrol/bermain gawai. Tugas terkumpul tepat waktu: <b>58%</b>.'],
+['Wawancara terstruktur 12 guru (jawaban dikode)','<b>9 dari 12</b> guru (75%) menilai siswa yang rutin belajar lebih aktif di kelas; <b>8 dari 12</b> (67%) menyebut tugas tidak selesai sebagai masalah utama.']],
+T:['Studi dokumen','Kuesioner','Observasi','Wawancara'],P:'kuan',tp:[/belajar|nilai|prestasi/],
+E:[/dokumen|rekap|nilai|\b(64|72|81)\b|rapor|pts/,/kuesioner|angket|survei|\b(45|38|63)\b|1,6/,/observasi|pengamatan|tugas|\b(58|50)\b/,/wawancara|guru|75|67|9 dari 12/],
+pm:'Tepat – semua data berupa angka dari sampel besar, diolah dengan persentase/rata-rata, dan hasilnya dapat digeneralisasi.',ph:'semua bukti berbentuk angka/persentase dari banyak responden untuk melihat hubungan antarvariabel.',
+pb:`<li><b>Rumusan masalah:</b> Apakah ada hubungan antara lama belajar mandiri dan nilai PTS Sosiologi siswa kelas X SMA Cahaya Ilmu?</li><li><b>Teknik:</b> A studi dokumen; B kuesioner; C observasi terstruktur; D wawancara terstruktur (dikodekan jadi angka).</li><li><b>Analisis:</b> A menunjukkan nilai naik seiring jam belajar (64 → 72 → 81). B menunjukkan baru 45% belajar rutin. C dan D (58% tugas tepat waktu; 75% guru) menguatkan pola yang sama.</li><li><b>Kesimpulan:</b> ada kecenderungan hubungan positif, tetapi bukan bukti sebab-akibat mutlak (faktor lain: metode belajar, motivasi).</li><li><b>Saran:</b> program jam belajar terjadwal dan pendampingan tugas.</li><li><b>Etika:</b> izin sekolah, persetujuan responden, nilai disamarkan per individu.</li>`},
+{id:'k2',ab:'Kuan 2',jn:'KASUS KUANTITATIF 2',t:'Kasus 2 (Kuantitatif): Media Sosial & Waktu Tidur',sc:'SMA Nusa Bakti (nama fiktif)',c:'#2e6f6a',
+st:'Wali kelas melihat banyak siswa mengantuk di jam pertama. Tim peneliti diminta <b>mengukur seberapa luas</b> masalah ini dan kaitannya dengan penggunaan media sosial malam hari pada 150 siswa.',
+ev:[['Hasil angket 150 siswa',bar('Memakai media sosial lebih dari 3 jam/hari',78)+bar('Tidur lewat pukul 23.00',61)+bar('Mengantuk di jam pertama',58)+'<p>Rata-rata tidur: <b>5,9 jam/hari</b>.</p>'],
+['Arsip UKS & presensi',tb(['Data','Semester lalu','Semester ini'],[['Keterlambatan masuk (kasus)',35,62],['Kunjungan UKS pusing/lelah',18,41]])],
+['Lembar pengamatan jam pertama (5 hari, 6 kelas)','Rata-rata <b>14 dari 32</b> siswa per kelas (±44%) menguap atau menelungkup di meja; frekuensi tertinggi pada Senin dan Kamis.'],
+['Angket 60 orang tua',bar('Anak membawa HP ke kamar saat tidur',70)+bar('Belum ada aturan jam gawai di rumah',52)]],
+T:['Kuesioner','Studi dokumen','Observasi','Kuesioner'],P:'kuan',tp:[/media sosial|gawai|ponsel|\bhp\b|tidur/],
+E:[/kuesioner|angket|survei|\b(78|61|58)\b|5,9/,/dokumen|arsip|uks|terlambat|keterlambatan|presensi|\b(35|62|18|41)\b/,/observasi|pengamatan|menguap|menelungkup|\b(14|44)\b/,/orang tua|\b(70|52)\b|aturan|kamar/],
+pm:'Tepat – masalah diukur dengan angka dari banyak responden, sehingga luas dan kecenderungannya terlihat.',ph:'bukti A–D semuanya berupa angka dan persentase untuk mengukur luasnya gejala.',
+pb:`<li><b>Rumusan masalah:</b> Seberapa besar hubungan penggunaan media sosial malam hari dengan lama tidur dan rasa kantuk siswa SMA Nusa Bakti?</li><li><b>Teknik:</b> A dan D kuesioner (siswa & orang tua); B studi dokumen; C observasi terstruktur.</li><li><b>Analisis:</b> A: 78% memakai media sosial >3 jam, 61% tidur larut. B: keterlambatan naik 35 → 62. C: ±44% siswa mengantuk di jam pertama. D: 70% HP dibawa ke kamar. Data saling menguatkan.</li><li><b>Kesimpulan:</b> penggunaan media sosial malam hari berkaitan dengan kurang tidur, tetapi hubungan belum tentu sebab-akibat tunggal.</li><li><b>Saran:</b> aturan jam gawai di rumah, edukasi tidur sehat bersama orang tua.</li><li><b>Etika:</b> izin sekolah dan orang tua, identitas disamarkan.</li>`},
+{id:'q1',ab:'Kual 1',jn:'KASUS KUALITATIF 1',t:'Kasus 3 (Kualitatif): Gotong Royong yang Memudar',sc:'Perumahan Griya Asri, RW 05 (nama fiktif)',c:'#a3422b',
+st:'Kerja bakti bulanan dulu diikuti hampir seluruh warga, kini hanya segelintir. Pengurus RW meminta tim peneliti <b>memahami makna dan alasan</b> di balik menurunnya partisipasi, bukan sekadar menghitung kehadiran.',
+ev:[['Wawanc­ara mendalam'.replace('­',''),qt('Pak Hasan (ketua RT)','“Dulu kerja bakti sekalian silaturahmi. Sekarang banyak yang bayar petugas kebersihan saja, katanya lebih praktis.”')+qt('Bu Tika (pekerja kantoran)','“Saya ingin ikut, tapi hari Minggu pun masih lembur. Rasanya tidak enak dianggap tidak peduli.”')+qt('Raka (pemuda)','“Tidak ada yang mengajak langsung, hanya pengumuman di grup. Jadi terasa seperti kewajiban, bukan kebersamaan.”')],
+['Catatan observasi partisipatif (3 kali Minggu)','<ul><li>Yang hadir sebagian besar bapak-bapak di atas 45 tahun.</li><li>Warga bercanda sambil membersihkan selokan; warga baru berdiri di pinggir dan tidak diajak.</li><li>Setelah selesai, hanya segelintir yang tinggal minum teh bersama.</li></ul>'],
+['Diskusi kelompok terarah (8 warga)','Peserta sepakat gotong royong tetap penting. Mereka mengusulkan jadwal bergantian, kerja bakti disertai makan bersama, dan undangan langsung bagi warga baru. Sebagian berpendapat iuran kebersihan sudah cukup menggantikan kehadiran.'],
+['Notulen rapat RW & grup chat','Pengumuman kerja bakti hanya berupa pesan satu arah; tiga pengumuman berturut-turut tidak dibalas sebagian besar anggota. Tidak ada catatan ajakan khusus untuk warga baru.']],
+T:['Wawancara','Observasi','FGD','Studi dokumen'],P:'kual',tp:[/gotong royong|kerja bakti|partisipasi|warga/],
+E:[/wawancara|hasan|tika|raka|praktis|lembur|silaturahmi/,/observasi|ikut kerja bakti|warga baru|pinggir|bapak/,/fgd|diskusi|jadwal|iuran|usul/,/dokumen|notulen|grup|pesan|pengumuman|satu arah/],
+pm:'Tepat – yang dicari adalah makna, alasan, dan pengalaman warga, sehingga data berupa kata dan perilaku.',ph:'pertanyaan penelitiannya “mengapa” dan “bagaimana warga memaknai”, dan semua bukti berupa kutipan, pengamatan, dan dokumen.',
+pb:`<li><b>Rumusan masalah:</b> Mengapa partisipasi warga RW 05 dalam kerja bakti menurun, dan bagaimana warga memaknai gotong royong?</li><li><b>Teknik:</b> A wawancara mendalam; B observasi partisipatif; C FGD; D studi dokumen.</li><li><b>Analisis (reduksi → penyajian → kesimpulan):</b> tema yang muncul: kesibukan kerja, anggapan praktis (bayar petugas), ajakan yang impersonal, dan warga baru yang belum terlibat. Keempat sumber menguatkan (triangulasi).</li><li><b>Kesimpulan:</b> gotong royong tidak hilang nilainya, tetapi cara mengajak dan waktunya tidak lagi cocok dengan kehidupan warga.</li><li><b>Saran:</b> jadwal bergantian, ajakan langsung, acara kebersamaan.</li><li><b>Etika:</b> persetujuan informan, nama disamarkan, tidak memaksa bicara.</li>`},
+{id:'q2',ab:'Kual 2',jn:'KASUS KUALITATIF 2',t:'Kasus 4 (Kualitatif): Dina, Siswa Pindahan',sc:'SMA Merdeka Satu, kelas X-4 (nama fiktif)',c:'#5b3a7a',
+st:'Dina pindah dari luar kota dan sudah dua bulan di kelas X-4. Wali kelas melihat ia jarang bergabung dengan kelompok. Tim peneliti diminta <b>memahami pengalaman Dina dan cara teman sekelas memaknainya</b>, tanpa mempermalukan Dina.',
+ev:[['Catatan observasi (2 minggu)','<ul><li>Dina duduk di baris belakang dan makan sendiri di kantin pada 6 dari 8 pengamatan.</li><li>Pada kerja kelompok bentukan guru ia aktif; pada kelompok bebas ia menunggu dipilih.</li><li>Teman satu bangku kadang mengajaknya mengobrol.</li></ul>'],
+['Wawancara mendalam',qt('Dina (nama samaran)','“Aku tidak enak mau gabung duluan. Logatku beda, takut ditertawakan.”')+qt('Sinta (teman sekelas)','“Bukan tidak mau berteman, tapi bingung mulai dari mana. Dina kelihatan pendiam.”')],
+['Jurnal wali kelas & arsip BK','Nilai akademik Dina baik, tetapi sering tidak mengumpulkan tugas kelompok yang dikerjakan di luar jam sekolah. Dina belum pernah berkonsultasi ke BK; sekolah belum punya program penyambutan siswa pindahan.'],
+['Diskusi kelompok terarah (6 siswa X-4)','Teman-teman mengaku jarang mengajak karena sungkan. Mereka mengusulkan teman pendamping, permainan perkenalan, dan kelompok campuran. Sebagian berpendapat Dina perlu lebih berani memulai.']],
+T:['Observasi','Wawancara','Studi dokumen','FGD'],P:'kual',tp:[/pindah|diterima|adaptasi|penyesuaian|interaksi|pengalaman|pergaulan|teman/],
+E:[/observasi|pengamatan|belakang|sendiri|kelompok/,/wawancara|dina|sinta|logat|tidak enak|sungkan|bingung/,/dokumen|jurnal|\bbk\b|catatan|arsip/,/fgd|diskusi|pendamping|usul/],
+pm:'Tepat – fokusnya pengalaman dan makna dari sudut pandang pelaku, sehingga data berupa kata dan perilaku.',ph:'tujuannya memahami perasaan dan makna, bukan menghitung; bukti berupa pengamatan, ucapan, dan catatan.',
+pb:`<li><b>Rumusan masalah:</b> Bagaimana pengalaman Dina beradaptasi di kelas X-4 dan bagaimana teman sekelas memaknai kehadirannya?</li><li><b>Teknik:</b> A observasi; B wawancara mendalam; C studi dokumen; D FGD.</li><li><b>Analisis:</b> perilaku menyendiri (A) berasal dari rasa tidak enak dan takut ditertawakan (B); teman pun sungkan, bukan menolak (B, D). C menunjukkan tidak ada program penyambutan. Sumber saling menguatkan (triangulasi).</li><li><b>Kesimpulan:</b> hambatan bersifat dua arah: Dina ragu memulai, teman bingung mendekati. Belum tentu satu pihak yang salah.</li><li><b>Saran:</b> teman pendamping, kelompok campuran, peran BK.</li><li><b>Etika:</b> nama samaran, tidak membuka identitas Dina, persetujuan informan, hak berhenti.</li>`}];
+let CUR=KAN,CURID='';
+const IDS=['k1','k2','q1','q2','kantin'],ABS={k1:'Kuan 1',k2:'Kuan 2',q1:'Kual 1',q2:'Kual 2',kantin:'Gabungan'};
+function sheet(c){const lb=c.ev.map((e,i)=>'ABCD'[i]+'. '+e[0]);return `<div class="box"><b>Identitas</b> (agar skormu dapat dibaca guru)<input type="text" id="nm" placeholder="Nama lengkap" maxlength="60"><input type="text" id="kl" placeholder="Kelas (contoh: X-3)" maxlength="20"></div><h3>1. Rumusan masalah</h3><textarea id="q0" rows="2" placeholder="Tulis satu rumusan masalah berbentuk pertanyaan…"></textarea><h3>2. Petakan bukti ke teknik pengumpulan data</h3>${lb.map((l,i)=>`<label>${l}<select id="s${i}"><option value="">– pilih teknik –</option><option>Observasi</option><option>Wawancara</option><option>Kuesioner</option><option>Studi dokumen</option><option>FGD</option></select></label>`).join('<br>')}<h3>3. Pendekatan penelitian yang paling tepat</h3><label><input type="radio" name="pd" value="kuan"> Kuantitatif</label><br><label><input type="radio" name="pd" value="kual"> Kualitatif</label><br><label><input type="radio" name="pd" value="campuran"> Gabungan keduanya</label><h3>4. Analisis & kesimpulan</h3><textarea id="q3" rows="4" placeholder="Hubungkan bukti A–D. Apa yang terjadi, mengapa, dan apa sarannya?"></textarea><h3>5. Etika</h3><textarea id="q4" rows="2" placeholder="Sebutkan dua hal etis yang harus kamu lakukan…"></textarea><button class="go" onclick="chk()">Periksa & Lihat Skor</button><div id="res"></div>`}
+function caseHtml(c){return `<h2>${c.t}</h2><p><i>${c.sc}</i></p><p>${c.st}</p><div class="box">Baca <b>4 bukti (A–D)</b> di bawah, lalu kerjakan <b>Lembar Analisis</b>. Skor tiap kasus akan dirata-rata menjadi <b>Skor Akhir</b> yang dipantau guru.</div>${c.ev.map((e,i)=>`<div class="box"><b>Bukti ${'ABCD'[i]} – ${e[0]}</b><br>${e[1]}</div>`).join('')}<hr><h2>Lembar Analisis</h2>${sheet(c)}`}
+CASES.slice(0,4).forEach(c=>I.push({k:c.jn,t:c.t.replace(/^Kasus \d \(\w+\): /,'Kasus: '),s:c.sc,c:c.c,cf:c,get h(){return caseHtml(c)}}));
+
+I.push({k:'PETUNJUK KASUS',t:'Petunjuk Mengerjakan Kasus',s:'Langkah & teknik mengisi lembar analisis',c:'#2f6b3a',h:`<h2>Petunjuk Teknik Mengerjakan Kasus</h2><p>Ada <b>5 kasus</b> di ruang ini: 2 kuantitatif, 2 kualitatif, dan 1 gabungan. Kerjakan satu per satu. Tiap kasus bernilai 100, lalu dirata-rata menjadi <b>Skor Akhir</b>.</p><h3>Langkah mengerjakan</h3><ol><li><b>Baca cerita dan 4 bukti (A–D)</b> sampai selesai. Tandai: mana angka, mana ucapan, mana perilaku, mana arsip.</li><li><b>Tulis rumusan masalah</b> berbentuk pertanyaan (Bagaimana / Mengapa / Apakah / Seberapa) yang menyebut gejala sosial dan kelompok yang diteliti. <i>(15 poin)</i></li><li><b>Petakan tiap bukti ke teknik</b> pengumpulan data. <i>(28 poin)</i></li><li><b>Pilih pendekatan</b>: kuantitatif, kualitatif, atau gabungan. <i>(15 poin)</i></li><li><b>Tulis analisis & kesimpulan</b>: hubungkan bukti A–D, jelaskan apa yang terjadi dan mengapa, lalu beri saran. <i>(27 poin)</i></li><li><b>Tulis etika penelitian</b>: minimal dua hal. <i>(15 poin)</i></li><li>Isi <b>Nama dan Kelas</b>, tekan <b>Periksa & Lihat Skor</b>, lalu kirim kode hasil ke guru.</li></ol><h3>Cara cepat mengenali teknik</h3><table><tr><th>Ciri bukti</th><th>Teknik</th></tr><tr><td>Angka/persentase dari banyak responden yang mengisi pertanyaan</td><td>Kuesioner</td></tr><tr><td>Kutipan ucapan narasumber, tanya-jawab langsung</td><td>Wawancara</td></tr><tr><td>Peneliti mengamati perilaku langsung di lapangan</td><td>Observasi</td></tr><tr><td>Arsip, nilai, absensi, catatan, laporan tertulis</td><td>Studi dokumen</td></tr><tr><td>Diskusi kelompok kecil yang dipandu peneliti</td><td>FGD</td></tr></table><h3>Tips analisis</h3><ul><li>Lihat apakah keempat bukti <b>saling menguatkan</b> (triangulasi).</li><li>Jangan langsung menyimpulkan sebab-akibat. Sebutkan bahwa bisa ada <b>faktor lain</b>.</li><li>Kasus kualitatif: pakai urutan <b>reduksi → penyajian → kesimpulan</b>.</li><li>Akhiri dengan <b>saran</b> yang konkret dan dapat dilakukan.</li></ul><div class="box"><b>Catatan:</b> skor esai dibaca otomatis dari isi jawabanmu, jadi tulis lengkap dengan kalimat sendiri. Guru akan membaca jawabanmu langsung.</div>`});
+function fin(L){return L.length?Math.round(L.reduce((a,x)=>a+x.s,0)/L.length):0}
+function chk0(){let s=0;CUR.T.forEach((v,i)=>{const e=gE('s'+i),ok=e.value==v;if(ok)s++;e.style.outline='2px solid '+(ok?'#2e8b3a':'#d33')});
+const r=(document.querySelector('input[name=pd]:checked')||{}).value;
+gE('res').innerHTML=`<div class="box"><b>Pemetaan teknik: ${s}/4 benar.</b><br>Pendekatan: ${r==CUR.P?CUR.pm:'Pertimbangkan lagi: '+CUR.ph}</div><h3>Contoh Pembahasan</h3><ul>${CUR.pb}</ul>`}
+
+// ---- skor akhir & ruang guru
+const WA_GURU='',/* isi nomor WhatsApp guru, contoh '6281234567890' (tanpa + dan tanpa 0 di depan); kosongkan agar siswa memilih sendiri kontaknya */PIN_GURU='guru123',K_HASIL='mpsHasil',K_GURU='mpsGuru',DR={},MEM={},FLD=['q0','q3','q4','nm','kl'],SEL=['s0','s1','s2','s3'];
+const MAXS=[15,28,15,27,15],NAMA=['Rumusan masalah','Pemetaan teknik','Pendekatan penelitian','Analisis & kesimpulan','Etika penelitian'];
+const lsGet=k=>{try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(e){return MEM[k]||[]}},lsSet=(k,v)=>{MEM[k]=v;try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const esH=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),gE=id=>document.getElementById(id);
+const predikat=s=>s>=85?'Sangat Baik':s>=70?'Baik':s>=55?'Cukup':'Perlu Bimbingan';
+function dSave(){FLD.concat(SEL).forEach(k=>{const e=gE(k);if(e)DR[k]=e.value});const r=document.querySelector('input[name=pd]:checked');if(r)DR.pd=r.value}
+function dRest(){FLD.concat(SEL).forEach(k=>{const e=gE(k);if(e&&DR[k])e.value=DR[k]});if(DR.pd){const r=document.querySelector('input[name=pd][value='+DR.pd+']');if(r)r.checked=true}const c=gE('mc');c.oninput=c.onchange=dSave}
+function hitung(){const C=CUR,q=gE('q0').value.trim(),ql=q.toLowerCase(),an=gE('q3').value.trim().toLowerCase(),et=gE('q4').value.trim().toLowerCase();
+let r=0;if(/\?\s*$/.test(q)||/^(bagaimana|mengapa|apa|apakah|seberapa|sejauh|adakah)\b/.test(ql))r+=5;if(q.length>=40)r+=5;if(C.tp.every(x=>x.test(ql)))r+=5;
+const t=C.T.reduce((s,v,i)=>s+(gE('s'+i).value==v?7:0),0),p=(document.querySelector('input[name=pd]:checked')||{}).value==C.P?15:0;
+let a=C.E.reduce((s,x)=>s+(x.test(an)?4:0),0);
+if(/triangulasi|menguatkan|melengkapi|saling/.test(an))a+=4;if(/saran|sebaiknya|disarankan|rekomendasi|zona|hari tanpa|program|jadwal/.test(an))a+=4;if(/bukan satu-satunya|bukan hanya|faktor lain|tidak hanya|belum tentu|hubungan|korelasi/.test(an))a+=3;if(an.length<60)a=Math.min(a,8);
+const e=et.length<15?0:Math.min(3,[/izin|persetujuan|consent|setuju|sukarela/,/rahasia|samar|inisial|anonim|identitas/,/tidak (merugikan|memaksa|mempermalukan)|jangan memaksa|berhenti|hak /,/jujur|manipulasi|sumber|plagiat|menghargai/].filter(x=>x.test(et)).length)*5;
+return[r,t,p,a,e]}
+function chk(){dSave();const nm=gE('nm').value.trim(),kl=gE('kl').value.trim(),RS=gE('res');
+if(!nm||!kl){RS.innerHTML='<div class="box"><b>Isi Nama dan Kelas dulu</b> di bagian atas lembar agar skormu dapat dibaca guru.</div>';gE('nm').focus();return}
+chk0();const D=hitung(),tot=D.reduce((a,b)=>a+b,0),rec={id:CUR.id,n:nm,k:kl,w:Date.now(),s:tot,d:D,a:{r:gE('q0').value,t:[0,1,2,3].map(i=>gE('s'+i).value),p:DR.pd||'',an:gE('q3').value,e:gE('q4').value}};
+lsSet(K_HASIL,lsGet(K_HASIL).filter(x=>!(x.n==nm&&x.k==kl&&(x.id||'kantin')==rec.id)).concat(rec));dbPush(rec);
+const mine=lsGet(K_HASIL).filter(x=>x.n==nm&&x.k==kl),code='MPS2:'+btoa(unescape(encodeURIComponent(JSON.stringify(mine))));
+RS.insertAdjacentHTML('afterbegin',`<div class="box" style="text-align:center"><div>Skor kasus <b>${esH(ABS[CUR.id])}</b> – <b>${esH(nm)}</b> (${esH(kl)})</div><div class="big">${tot}<small>/100</small></div><b>${predikat(tot)}</b></div><div class="box" style="text-align:center"><div>🏆 <b>Skor Akhir</b> (rata-rata ${mine.length}/5 kasus yang sudah dikerjakan)</div><div class="big">${fin(mine)}<small>/100</small></div><b>${predikat(fin(mine))}</b> · ${mine.map(x=>ABS[x.id||'kantin']+': '+x.s).join(' · ')}</div><h3>Rincian Skor Kasus Ini</h3>${NAMA.map((l,i)=>bar(`${l} (${D[i]}/${MAXS[i]})`,Math.round(D[i]/MAXS[i]*100))).join('')}<div class="box"><b>Catatan:</b> skor esai (rumusan, analisis, etika) dihitung otomatis dari kata kunci penting, jadi bersifat indikatif. Guru akan membaca jawabanmu langsung. Kerjakan kasus lain di panel emas ruang kasus untuk menaikkan kelengkapan Skor Akhir.</div><h3>Kirim Hasil ke Guru</h3><p>Kode ini berisi <b>semua kasus</b> yang sudah kamu kerjakan di perangkat ini. Tekan <b>Kirim via WhatsApp</b> lalu pilih gurumu. Jika tidak terbuka, tekan <b>Salin Kode</b> dan tempel di chat guru.</p><textarea id="cd" rows="3" readonly>${code}</textarea><button class="go" onclick="tCopy()">📋 Salin Kode</button> <button class="go" onclick="kirimWA()">💬 Kirim via WhatsApp</button><hr>`);RS.scrollIntoView({behavior:'smooth'});WAHEAD='Hasil Museum Penelitian Sosial\nNama: '+nm+'\nKelas: '+kl+'\nSkor Akhir: '+fin(mine)+'/100\n\nKode (jangan diubah):\n';pack(mine).then(c=>{const e=gE('cd');if(e&&c.length<code.length)e.value=c}).catch(()=>{})}
+let WAHEAD='';
+function copyOk(){showH('Kode disalin. Tempel di chat WhatsApp gurumu (tahan lama, lalu Tempel), lalu kirim.')}
+function tCopy(){const e=gE('cd');e.focus();e.select();try{e.setSelectionRange(0,e.value.length)}catch(x){}let ok=0;try{ok=document.execCommand('copy')}catch(x){}
+if(ok){copyOk();return}if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(e.value).then(copyOk,()=>showH('Salin manual: tahan lama pada kode, pilih Salin.'));return}showH('Salin manual: tahan lama pada kode, pilih Salin.')}
+function kirimWA(){const t=WAHEAD+gE('cd').value;
+const wa=()=>{tCopy();const u='https://wa.me/'+WA_GURU+(t.length<1400?'?text='+encodeURIComponent(t):'');const w=window.open(u,'_blank');if(!w)location.href=u};
+if(!WA_GURU&&navigator.share){navigator.share({text:t}).catch(e=>{if(!e||e.name!='AbortError')wa()});return}wa()}
+async function pack(o){const st=new Blob([JSON.stringify(o)]).stream().pipeThrough(new CompressionStream('deflate-raw'));const b=new Uint8Array(await new Response(st).arrayBuffer());let t='';b.forEach(x=>t+=String.fromCharCode(x));return 'MPS3:'+btoa(t)}
+async function unpack(c){if(/^MPS3:/.test(c)){const b=Uint8Array.from(atob(c.slice(5)),x=>x.charCodeAt(0));return JSON.parse(await new Response(new Blob([b]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).text())}return JSON.parse(decodeURIComponent(escape(atob(c.replace(/^MPS[12]:/,'')))))}
+// Ruang Guru
+let GA=[];
+function tOpen(){stopS();$('#rd').style.display='none';$('#mc').oninput=$('#mc').onchange=null;$('#mc').innerHTML=`<h2>🎓 Ruang Guru</h2><p>Masukkan PIN guru untuk melihat hasil siswa.</p><input type="password" id="pn" placeholder="PIN" onkeydown="if(event.key=='Enter')tLogin()"><button class="go" onclick="tLogin()">Masuk</button><div id="pe"></div>`;$('#m').style.display='flex';for(const k in keys)keys[k]=0;$('.card').scrollTop=0}
+function tLogin(){if(gE('pn').value===PIN_GURU)tDash();else gE('pe').innerHTML='<div class="box">PIN salah.</div>'}
+function tAll(){const m={};lsGet(K_HASIL).concat(lsGet(K_GURU),DBR).forEach(x=>{const id=x.id||'kantin',k=x.n+'|'+x.k,u=m[k]||(m[k]={n:x.n,k:x.k,w:0,c:{}});if(!u.c[id]||x.w>u.c[id].w)u.c[id]=Object.assign({},x,{id});u.w=Math.max(u.w,x.w)});
+return Object.values(m).map(u=>{const L=Object.values(u.c);u.s=fin(L);u.nc=L.length;return u}).sort((a,b)=>String(a.k).localeCompare(b.k)||String(a.n).localeCompare(b.n))}
+function tDash(){const A=GA=tAll(),n=A.length,sc=A.map(x=>x.s),cell=(x,id)=>x.c[id]?`<b>${x.c[id].s}</b>`:'<span style="color:#999">–</span>';
+const avg=id=>{const L=A.filter(x=>x.c[id]);return L.length?(L.reduce((a,x)=>a+x.c[id].s,0)/L.length).toFixed(0):'–'};
+$('#mc').innerHTML=`<h2>🎓 Pemantauan Skor Siswa</h2><p><small>${DB?'🟢 Terhubung: skor siswa masuk otomatis (real-time).':'⚪ Mode offline: tempel kode hasil siswa di bawah.'}</small></p><div class="box"><b>${n}</b> siswa · rata-rata Skor Akhir <b>${n?(sc.reduce((a,b)=>a+b,0)/n).toFixed(1):0}</b> · tertinggi <b>${n?Math.max(...sc):0}</b> · terendah <b>${n?Math.min(...sc):0}</b><br>Perlu bimbingan (&lt;55): <b>${A.filter(x=>x.s<55).length}</b> · Selesai 5/5 kasus: <b>${A.filter(x=>x.nc==5).length}</b><br><small>Skor Akhir = rata-rata skor kasus yang sudah dikerjakan siswa. Rata-rata per kasus: ${IDS.map(id=>ABS[id]+' '+avg(id)).join(' · ')}</small></div><div style="overflow-x:auto"><table><tr><th>Nama</th><th>Kls</th>${IDS.map(id=>`<th>${ABS[id]}</th>`).join('')}<th>Kasus</th><th>Skor Akhir</th><th></th></tr>${A.map((x,i)=>`<tr${x.s<55?' style="background:#f8dcd6"':''}><td>${esH(x.n)}</td><td>${esH(x.k)}</td>${IDS.map(id=>`<td>${cell(x,id)}</td>`).join('')}<td>${x.nc}/5</td><td><b>${x.s}</b><br><small>${predikat(x.s)}</small></td><td><button class="go" style="margin:0;padding:4px 8px" onclick="tView(${i})">Lihat</button></td></tr>`).join('')||'<tr><td colspan="10">Belum ada hasil.</td></tr>'}</table></div><div id="dt"></div><h3>Tambah hasil dari siswa</h3><p>Tempel kode hasil dari siswa (satu kode per baris). Kode lama (MPS1/MPS2) dan pesan WhatsApp lengkap juga diterima.</p><textarea id="pc" rows="4" placeholder="MPS2:…"></textarea><button class="go" onclick="tImport()">Tambahkan</button> <button class="go" onclick="tCsv()">⬇ Unduh CSV</button> <button class="go" style="background:#555" onclick="tClear()">Hapus semua</button><div id="gm"></div>`}
+function tView(i){const x=GA[i];gE('dt').innerHTML=`<div class="box"><h3 style="margin:0">${esH(x.n)} – ${esH(x.k)} · Skor Akhir ${x.s}/100 (${predikat(x.s)})</h3>${IDS.filter(id=>x.c[id]).map(id=>{const c=x.c[id],a=c.a||{};return`<hr><p><b>${ABS[id]}: ${c.s}/100</b><br>${NAMA.map((l,j)=>`${l}: ${c.d[j]}/${MAXS[j]}`).join(' · ')}</p><p><b>Rumusan:</b> ${esH(a.r)}</p><p><b>Teknik A–D:</b> ${[].concat(a.t||[]).map(esH).join(' / ')}</p><p><b>Pendekatan:</b> ${esH(a.p)}</p><p><b>Analisis:</b> ${esH(a.an)}</p><p><b>Etika:</b> ${esH(a.e)}</p><p><small>${new Date(c.w).toLocaleString('id-ID')}</small></p>`}).join('')}</div>`;gE('dt').scrollIntoView({behavior:'smooth'})}
+async function tImport(){const T=gE('pc').value,M=T.match(/MPS[123]:[A-Za-z0-9+\/=_-]+/g),L=M||T.split(/\s+/).filter(Boolean),G=lsGet(K_GURU);let ok=0,bad=0;
+for(const c of L){try{const o=await unpack(c);[].concat(o).forEach(r=>{const d=(r.d||[]).map(Number),id=r.id||'kantin';if(!r.n||!IDS.includes(id)||d.length!=5||d.some(v=>!(v>=0))||d.reduce((a,b)=>a+b,0)!==r.s||r.s>100)throw 0;G.push({id:id,n:String(r.n).slice(0,60),k:String(r.k||'').slice(0,20),w:+r.w||Date.now(),s:r.s,d:d,a:r.a&&typeof r.a=='object'?r.a:{}});ok++})}catch(e){bad++}}
+lsSet(K_GURU,G);tDash();gE('gm').innerHTML=`<div class="box">${ok} hasil kasus ditambahkan${bad?`, ${bad} kode tidak valid`:''}.</div>`}
+function tCsv(){const A=tAll(),q=v=>{let s=String(v==null?'':v);if(/^[=+\-@]/.test(s))s="'"+s;return'"'+s.replace(/"/g,'""')+'"'},H=['Nama','Kelas'].concat(IDS.map(id=>'Skor '+ABS[id]),['Kasus selesai','Skor Akhir','Predikat','Waktu terakhir']),
+rows=[H].concat(A.map(x=>[x.n,x.k].concat(IDS.map(id=>x.c[id]?x.c[id].s:''),[x.nc+'/5',x.s,predikat(x.s),new Date(x.w).toLocaleString('id-ID')]))),
+u=URL.createObjectURL(new Blob(['\ufeff'+rows.map(r=>r.map(q).join(',')).join('\n')],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download='hasil-museum-penelitian-sosial.csv';document.body.appendChild(a);a.click();a.remove()}
+function tClear(){if(confirm('Hapus semua hasil yang tersimpan di perangkat ini?')){lsSet(K_HASIL,[]);lsSet(K_GURU,[]);tDash()}}
+let DB=null,UID=null,DBR=[];
+function dbPush(r){if(!DB||!UID){showH('Skor tersimpan di perangkat ini. Kirim kode hasil ke gurumu.');return}DB.doc('hasil/'+String(UID).replace(/\W/g,'')+'_'+r.id).set(Object.assign({u:String(UID)},r)).then(()=>showH('✓ Skor terkirim ke guru'),()=>showH('Skor belum terkirim ke guru. Gunakan kode hasil.'))}
+(async()=>{try{if(!window.claude)return;const us=await claude.use('user');UID=us&&us.id?await us.id():null;DB=await claude.use('db');if(!DB)return;DB.collection('hasil').onSnapshot(q=>{DBR=q.docs.map(d=>d.data()).filter(r=>r&&r.n&&IDS.includes(r.id)&&Number.isFinite(r.s)&&Array.isArray(r.d)&&r.d.length==5&&r.d.every(Number.isFinite)).map(r=>Object.assign(r,{n:String(r.n).slice(0,60),k:String(r.k||'').slice(0,20),w:+r.w||0}));const d=gE('dt');if(d&&!d.innerHTML)tDash()},()=>{})}catch(e){}})();
+$('#bt').onclick=tOpen;
+// ---- 3D scene
+const R=new THREE.WebGLRenderer({canvas:$('#c'),antialias:true});R.setPixelRatio(Math.min(devicePixelRatio,2));R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1.25;
+const S=new THREE.Scene();S.background=new THREE.Color(0x1b150f);S.fog=new THREE.Fog(0x1b150f,16,52);
+const cam=new THREE.PerspectiveCamera(72,1,.1,220);
+function rs(){R.setSize(innerWidth,innerHeight);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix()}addEventListener('resize',rs);rs();
+const M=(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:.85,metalness:0},o||{}));
+const add=(g,m,x,y,z,p)=>{const o=new THREE.Mesh(g,m);o.position.set(x,y,z);(p||S).add(o);return o};
+const B=(w,h,d)=>new THREE.BoxGeometry(w,h,d),PL=(w,h)=>new THREE.PlaneGeometry(w,h),GL=c=>new THREE.MeshBasicMaterial({color:c});
+function cv(w,h,f){const c=document.createElement('canvas');c.width=w;c.height=h;f(c.getContext('2d'));return new THREE.CanvasTexture(c)}
+S.add(new THREE.HemisphereLight(0xfff0d8,0x4a3a2a,.5));
+[[0,6,2,34],[-18,4,2,24],[18,4,2,24],[0,4,-13,16],[0,10,-27,26],[18,10,-27,24]].forEach(([x,y,z,d])=>{const l=new THREE.PointLight(0xffd9a0,.85,d);l.position.set(x,y,z);S.add(l)});
+const nz=(g,w,h,n,a)=>{for(let i=0;i<n;i++){g.fillStyle=`rgba(${Math.random()>.5?255:60},${Math.random()>.5?240:50},${Math.random()>.5?220:40},${a})`;g.fillRect(Math.random()*w,Math.random()*h,2,2)}};
+function mbl(g,x,y,w,h,b){g.fillStyle=b;g.fillRect(x,y,w,h);for(let i=0;i<7;i++){g.strokeStyle=`rgba(90,80,70,${.08+Math.random()*.12})`;g.lineWidth=.6+Math.random()*1.4;g.beginPath();let px=x+Math.random()*w,py=y;g.moveTo(px,py);for(let k=0;k<6;k++){px+=(Math.random()-.5)*w*.5;py+=h/6;g.lineTo(Math.max(x,Math.min(x+w,px)),py)}g.stroke()}nz(g,w,h,260,.05)}
+const ft=cv(256,256,g=>{mbl(g,0,0,128,128,'#eadfcc');mbl(g,128,0,128,128,'#b8a88a');mbl(g,0,128,128,128,'#b8a88a');mbl(g,128,128,128,128,'#eadfcc');g.strokeStyle='#7d6e5a';g.lineWidth=3;[[0,0],[128,0],[0,128],[128,128]].forEach(([a,b])=>g.strokeRect(a,b,128,128))});
+const mb=cv(256,256,g=>mbl(g,0,0,256,256,'#f1eadb'));
+const wd=cv(128,128,g=>{g.fillStyle='#6b4423';g.fillRect(0,0,128,128);for(let i=0;i<46;i++){g.fillStyle=`rgba(${Math.random()>.5?20:200},${Math.random()>.5?10:150},${Math.random()>.5?5:90},.12)`;g.fillRect(0,Math.random()*128,128,1+Math.random()*2)}});
+const wp=cv(128,128,g=>{g.fillStyle='#f6eedc';g.fillRect(0,0,128,128);g.strokeStyle='rgba(176,138,62,.2)';g.lineWidth=2;[[32,32],[96,32],[32,96],[96,96]].forEach(([x,y])=>{g.beginPath();g.moveTo(x,y-24);g.lineTo(x+16,y);g.lineTo(x,y+24);g.lineTo(x-16,y);g.closePath();g.stroke();g.beginPath();g.arc(x,y,4,0,7);g.stroke()});nz(g,128,128,300,.03)});
+const cp=cv(64,64,g=>{g.fillStyle='#7a1f2b';g.fillRect(0,0,64,64);g.strokeStyle='#d4a64a';g.lineWidth=2;g.strokeRect(4,4,56,56);g.fillStyle='#d4a64a';g.beginPath();g.moveTo(32,16);g.lineTo(48,32);g.lineTo(32,48);g.lineTo(16,32);g.fill();g.fillStyle='#5a1420';g.fillRect(28,28,8,8);nz(g,64,64,200,.05)});
+const ct=cv(128,128,g=>{g.fillStyle='#e9dcc0';g.fillRect(0,0,128,128);g.fillStyle='#f6eedb';g.fillRect(12,12,104,104);g.strokeStyle='#b89a5a';g.lineWidth=3;g.strokeRect(8,8,112,112);g.strokeRect(18,18,92,92);nz(g,128,128,200,.03)});
+const rg=(a,b)=>cv(64,64,g=>{const k=g.createRadialGradient(32,32,a,32,32,32);k.addColorStop(0,'rgba('+b[0]+',.'+b[1]+')');k.addColorStop(1,'rgba('+b[0]+',0)');g.fillStyle=k;g.fillRect(0,0,64,64)});
+const gt=rg(0,['255,225,160',9]),st=rg(4,['0,0,0',6]),vg=cv(64,64,g=>{const k=g.createRadialGradient(32,32,18,32,32,46);k.addColorStop(0,'rgba(0,0,0,0)');k.addColorStop(1,'rgba(0,0,0,.5)');g.fillStyle=k;g.fillRect(0,0,64,64)});
+const sh=(x,y,z,r)=>{add(PL(r*2,r*2),new THREE.MeshBasicMaterial({map:st,transparent:true,depthWrite:false,toneMapped:false}),x,y+.035,z).rotation.x=-Math.PI/2};
+const tx=(t,a,b)=>{const c=t.clone();c.needsUpdate=true;c.wrapS=c.wrapT=THREE.RepeatWrapping;c.anisotropy=4;c.repeat.set(a,b);return c};
+const gm=M(0xd4a64a,{emissive:0x1a1204,metalness:.9,roughness:.28}),gl=GL(0xfff2c9),wood=M(0x5a3a22),art=[];
+function chand(x,y,z,k){const g=new THREE.Group(),r=k?1.6:.9;g.position.set(x,y,z);S.add(g);
+add(new THREE.CylinderGeometry(.03,.03,1.2,6),gm,0,.6,0,g);add(new THREE.TorusGeometry(r,.07,8,28),gm,0,0,0,g).rotation.x=Math.PI/2;add(new THREE.TorusGeometry(r*.55,.05,8,24),gm,0,.25,0,g).rotation.x=Math.PI/2;
+for(let i=0;i<10;i++){const a=i*Math.PI/5;add(new THREE.SphereGeometry(.11,8,6),gl,Math.cos(a)*r,.12,Math.sin(a)*r,g)}add(new THREE.SphereGeometry(.22,10,8),gl,0,.3,0,g);const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:gt,color:0xffd9a0,blending:THREE.AdditiveBlending,depthWrite:false,transparent:true,opacity:.55}));sp.scale.set(r*5,r*5,1);sp.position.y=.2;g.add(sp);for(let i=0;i<12;i++){const a=i*Math.PI/6;add(new THREE.OctahedronGeometry(.07),M(0xffffff,{roughness:.05,metalness:.2,transparent:true,opacity:.75}),Math.cos(a)*r*.8,-.2,Math.sin(a)*r*.8,g)}}
+let WC=0xe8dcc3;
+function room(x0,x1,z0,z1,y,H,fc){const w=x1-x0,d=z1-z0,cx=(x0+x1)/2,cz=(z0+z1)/2;
+add(PL(w,d),M(fc,{map:tx(ft,w/2,d/2),roughness:.22,metalness:.1}),cx,y,cz).rotation.x=-Math.PI/2;add(B(w,.4,d),M(0x2a1d12),cx,y-.21,cz);add(PL(w,d),new THREE.MeshBasicMaterial({map:vg,transparent:true,depthWrite:false,toneMapped:false}),cx,y+.04,cz).rotation.x=-Math.PI/2;
+add(PL(w,d),M(0xffffff,{map:tx(ct,w/4,d/4),roughness:1}),cx,y+H,cz).rotation.x=Math.PI/2;
+for(let x=x0+4;x<x1;x+=4)add(B(.35,.3,d),M(0x2a1d12),x,y+H-.15,cz);chand(cx,y+H-.9,cz,H>7)}
+function wall(ax,c,a0,a1,y,H,gp){gp=gp||[];const sg=[];let p=a0;gp.forEach(([g0,g1])=>{sg.push([p,g0]);p=g1});sg.push([p,a1]);
+const bx=(s,e,y0,h,t)=>{if(e-s<.01)return;const L=e-s,m=(s+e)/2,X=ax=='x'?c:m,Z=ax=='x'?m:c;return add(B(ax=='x'?t:L,h,ax=='x'?L:t),null,X,y0+h/2,Z)};
+const seg=(s,e,y0,h,tr)=>{if(e-s<.01)return;const L=e-s,m=(s+e)/2,X=ax=='x'?c:m,Z=ax=='x'?m:c,d=t=>[ax=='x'?t:L,ax=='x'?L:t];
+add(B(d(.3)[0],h,d(.3)[1]),M(WC,{map:tx(wp,L/3,h/3)}),X,y0+h/2,Z);if(tr){add(B(d(.38)[0],1.1,d(.38)[1]),M(0xffffff,{map:tx(wd,L/2,1),roughness:.45}),X,y+.55,Z);add(B(d(.42)[0],.1,d(.42)[1]),gm,X,y+1.15,Z);add(B(d(.46)[0],.22,d(.46)[1]),M(0xf3ead6),X,y+h-.11,Z);add(B(d(.4)[0],.16,d(.4)[1]),wood,X,y+.08,Z)}};
+sg.forEach(([s,e])=>seg(s,e,y,H,1));
+gp.forEach(([g0,g1])=>{seg(g0,g1,y+3.6,H-3.6,0);[g0,g1].forEach(q=>add(B(ax=='x'?.5:.3,3.6,ax=='x'?.3:.5),gm,ax=='x'?c:q,y+1.8,ax=='x'?q:c))})}
+// Lantai 1
+WC=0xe8dcc3;room(-9,9,-6,10,0,8,0xffffff);wall('z',10,-9,9,0,8,[[-2.2,2.2]]);wall('z',-6,-9,9,0,8,[[-2.6,2.6]]);wall('x',-9,-6,10,0,8,[[0,4]]);wall('x',9,-6,10,0,8,[[0,4]]);
+WC=0x9fc9c2;room(-27,-9,-6,10,0,5.5,0xf0e0c0);wall('z',10,-27,-9,0,5.5);wall('z',-6,-27,-9,0,5.5);wall('x',-27,-6,10,0,5.5);
+WC=0xe0aaa0;room(9,27,-6,10,0,5.5,0xf0e0c0);wall('z',10,9,27,0,5.5);wall('z',-6,9,27,0,5.5);wall('x',27,-6,10,0,5.5);
+// Tangga
+WC=0xd8cdb0;wall('x',-3,-20,-6,0,12);wall('x',3,-20,-6,0,12);
+for(let k=0;k<20;k++){const z=-6-(k+.5)*.7,h=(k+1)*.3;add(B(5.4,h,.7),M(k%2?0x6b3b2a:0x7a4a33),0,h/2,z);add(B(2.2,.03,.7),M(0x7a1f2b),0,h+.01,z)}
+[-2.7,2.7].forEach(x=>{add(B(.08,.08,15.23),gm,x,4,-13).rotation.x=Math.atan2(6,14);add(B(.08,1,.08),gm,x,.5,-6.2);add(B(.08,1,.08),gm,x,6.5,-19.8)});
+// Lantai 2
+WC=0xb8c4e0;room(-9,9,-34,-20,6,5.5,0xf0e0c0);wall('z',-20,-9,9,6,5.5,[[-3,3]]);wall('z',-34,-9,9,6,5.5);wall('x',-9,-34,-20,6,5.5);wall('x',9,-34,-20,6,5.5,[[-29,-25]]);
+WC=0xc9b3d6;room(9,27,-34,-20,6,5.5,0xf0e0c0);wall('z',-20,9,27,6,5.5);wall('z',-34,9,27,6,5.5);wall('x',27,-34,-20,6,5.5);
+// karpet
+[[3,16,0,2],[18,3,-18,2],[18,3,18,2],[3,14,0,-27,6],[18,3,18,-27,6]].forEach(([w,d,x,z,y])=>add(PL(w,d),M(0xffffff,{map:tx(cp,w/1.2,d/1.2),roughness:1}),x,(y||0)+.02,z).rotation.x=-Math.PI/2);
+// jendela & pintu
+const win=(x,y,z,ry)=>{const g=new THREE.Group();g.position.set(x,y,z);g.rotation.y=ry;S.add(g);add(B(2.4,3.4,.12),gm,0,0,0,g);add(PL(2,3),new THREE.MeshBasicMaterial({map:cv(8,64,g=>{const k=g.createLinearGradient(0,0,0,64);k.addColorStop(0,'#5b8fd8');k.addColorStop(1,'#f6d9a0');g.fillStyle=k;g.fillRect(0,0,8,64)})}),0,0,.07,g);add(B(.08,3,.04),gm,0,0,.1,g);add(B(2,.08,.04),gm,0,0,.1,g)};
+[[-5.5,3.2,9.85],[5.5,3.2,9.85],[-14,2.8,9.85],[-22,2.8,9.85],[14,2.8,9.85],[22,2.8,9.85]].forEach(([x,y,z])=>win(x,y,z,Math.PI));
+
+// lobi: tiang, patung, spanduk
+[[-6,-3],[6,-3],[-6,7],[6,7]].forEach(([x,z])=>{sh(x,0,z,1.4);add(new THREE.CylinderGeometry(.4,.4,8,28),M(0xffffff,{map:tx(mb,1,3),roughness:.3}),x,4,z);add(B(1,.3,1),gm,x,.15,z);add(B(1,.3,1),gm,x,7.85,z)});
+sh(0,0,2,3.6);add(new THREE.CylinderGeometry(2.2,2.4,.4,32),M(0xffffff,{map:tx(mb,2,1),roughness:.25}),0,.2,2);add(new THREE.TorusGeometry(1.8,.08,8,32),gm,0,.45,2).rotation.x=Math.PI/2;add(new THREE.CylinderGeometry(.25,.4,1,12),gm,0,.9,2);
+const gb=add(new THREE.SphereGeometry(1,18,14),new THREE.MeshBasicMaterial({color:0x4aa3a0,wireframe:true}),0,2.3,2);art.push(gb);
+['OBSERVASI','WAWANCARA','KUESIONER','DOKUMEN'].forEach((t,i)=>add(PL(2.2,1.2),new THREE.MeshBasicMaterial({side:2,map:cv(256,140,g=>{g.fillStyle=['#7a1f2b','#1f4e8c','#2f6b3a','#5b3a7a'][i];g.fillRect(0,0,256,140);g.strokeStyle='#d4a64a';g.lineWidth=6;g.strokeRect(6,6,244,128);g.fillStyle='#fff8e8';g.font='600 30px Fredoka,sans-serif';g.textAlign='center';g.fillText(t,128,82)})}),[-6.5,6.5,-6.5,6.5][i],6.2,[2,2,-1,-1][i]));
+// bangku
+[[-4.5,2,0,Math.PI/2],[4.5,2,0,Math.PI/2],[-23,-3,0,Math.PI/2],[-23,7,0,Math.PI/2],[23,-3,0,Math.PI/2],[23,7,0,Math.PI/2],[-4.5,-31,6,0],[4.5,-31,6,0],[18,-31,6,0]].forEach(([x,z,y,r])=>{const g=new THREE.Group();g.position.set(x,y,z);g.rotation.y=r;S.add(g);sh(x,y,z,1.5);add(B(2.2,.14,.7),M(0x4a1f1a,{roughness:.45}),0,.5,0,g);add(B(2.3,.06,.8),gm,0,.42,0,g);[[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([a,b])=>add(new THREE.CylinderGeometry(.04,.04,.42,8),gm,a,.21,b*.3,g))});
+// pedestal & tanaman
+[[-3.5,7,0,'books'],[3.5,7,0,'bars'],[-18,-2,0,'bars'],[-18,6,0,'lens'],[18,-2,0,'books'],[18,6,0,'globe'],[-6,-27,6,'lens'],[6,-27,6,'globe'],[13,-23,6,'books'],[23,-23,6,'bars']].forEach(([x,z,y,k])=>{
+sh(x,y,z,1.3);add(new THREE.CylinderGeometry(.6,.7,1.1,24),M(0xffffff,{map:tx(mb,2,1),roughness:.3}),x,y+.55,z);add(B(1.1,1.3,1.1),M(0xbfe3ee,{transparent:true,opacity:.16,roughness:.05,metalness:.3,depthWrite:false}),x,y+1.75,z);const o=mk(k);o.position.set(x,y+1.15,z);S.add(o);art.push(o)});
+[[-8,9,0],[8,9,0],[-8,-5,0],[8,-5,0],[-26,9,0],[-26,-5,0],[26,9,0],[26,-5,0],[-8,-33,6],[8,-33,6],[10,-33,6],[26,-33,6],[26,-21,6],[-8,-21,6]].forEach(([x,z,y])=>{sh(x,y,z,.8);add(new THREE.CylinderGeometry(.3,.22,.5,14),M(0xa3422b,{roughness:.6}),x,y+.25,z);[[0,1,0,.45],[.2,.8,.1,.3],[-.2,.85,-.1,.3]].forEach(([a,b,c,r])=>add(new THREE.SphereGeometry(r,8,6),M(0x2f6b3a),x+a,y+b,z+c))});
+function mk(k){const g=new THREE.Group();
+if(k=='globe'){add(new THREE.SphereGeometry(.4,16,12),new THREE.MeshBasicMaterial({color:0x4aa3a0,wireframe:true}),0,.5,0,g);add(new THREE.SphereGeometry(.15,12,8),M(0xc9a24a),0,.5,0,g)}
+if(k=='books')[[.07,0x7a1f2b,0],[.2,0x1f4e8c,.3],[.33,0x2f6b3a,-.2]].forEach(([y,c,r])=>{const o=add(B(.7,.12,.5),M(c),0,y,0,g);o.rotation.y=r});
+if(k=='bars')[.25,.45,.35,.65].forEach((h,i)=>add(B(.14,h,.14),M([0x1f4e8c,0xc9a24a,0x7a1f2b,0x2f6b3a][i]),-.27+i*.18,h/2,0,g));
+if(k=='lens'){add(new THREE.TorusGeometry(.28,.05,8,24),M(0xc9a24a),0,.5,0,g);const h=add(new THREE.CylinderGeometry(.04,.04,.4,8),M(0x5a3a22),.27,.2,0,g);h.rotation.z=.7}
+g.userData.k=k;return g}
+function wrap(g,t,x,y,mw,lh){let l='';t.split(' ').forEach(w=>{if(g.measureText(l+w).width>mw){g.fillText(l,x,y);y+=lh;l=''}l+=w+' '});g.fillText(l,x,y)}
+const IL=['museum','people','steps','shield','bars','bubbles','clip','report','phone','bars','phone','people','eye','clip'];
+const MO={museum:"<path d='M40 50L100 20L160 50Z'/><rect x='48' y='54' width='12' height='40'/><rect x='72' y='54' width='12' height='40'/><rect x='116' y='54' width='12' height='40'/><rect x='140' y='54' width='12' height='40'/><rect x='38' y='96' width='124' height='10' fill='#c9a24a'/>",
+people:"<circle cx='60' cy='46' r='14'/><circle cx='100' cy='38' r='16' fill='#c9a24a'/><circle cx='140' cy='46' r='14'/><path d='M38 100Q60 62 82 100Z'/><path d='M74 104Q100 52 126 104Z' fill='#c9a24a'/><path d='M118 100Q140 62 162 100Z'/>",
+steps:"<rect x='40' y='80' width='30' height='24'/><rect x='70' y='64' width='30' height='40'/><rect x='100' y='48' width='30' height='56'/><rect x='130' y='32' width='30' height='72'/><path d='M145 32V10l24 8-24 8' fill='#c9a24a'/>",
+shield:"<path d='M100 14L150 30V62Q150 90 100 108Q50 90 50 62V30Z'/><path d='M78 62L95 80L124 46' fill='none' stroke='#2f6b3a' stroke-width='8'/>",
+bars:"<rect x='44' y='70' width='22' height='34'/><rect x='76' y='50' width='22' height='54' fill='#c9a24a'/><rect x='108' y='62' width='22' height='42'/><rect x='140' y='30' width='22' height='74' fill='#c9a24a'/>",
+bubbles:"<rect x='30' y='24' width='86' height='44' rx='14'/><path d='M50 68L44 86L68 68Z'/><rect x='84' y='56' width='86' height='44' rx='14' fill='#c9a24a'/><path d='M150 100L160 114L136 100Z' fill='#c9a24a'/>",
+clip:"<rect x='56' y='16' width='88' height='96' rx='8'/><rect x='80' y='10' width='40' height='14' rx='4' fill='#c9a24a'/><path d='M70 44H130M70 62H130M70 80H110' stroke='#7a1f2b' stroke-width='5'/>",
+report:"<rect x='50' y='16' width='70' height='92'/><path d='M62 36H108M62 52H108' stroke='#8a5a14' stroke-width='5'/><circle cx='140' cy='76' r='24' fill='#c9a24a'/><path d='M140 76V52A24 24 0 0 1 164 76Z' fill='#7a1f2b'/>",
+phone:"<rect x='76' y='12' width='48' height='96' rx='10'/><rect x='84' y='26' width='32' height='56' fill='#c9a24a'/><circle cx='40' cy='56' r='12'/><path d='M22 96Q40 66 58 96Z'/><circle cx='160' cy='56' r='12'/><path d='M142 96Q160 66 178 96Z'/>",
+lens:"<circle cx='90' cy='54' r='32' fill='none' stroke-width='8' stroke='#c9a24a'/><path d='M114 78L150 108' stroke='#fff8e8' stroke-width='10'/><path d='M72 62L84 50L96 58L108 42' fill='none' stroke='#fff8e8' stroke-width='4'/>",
+pie:"<circle cx='100' cy='60' r='40'/><path d='M100 60V20A40 40 0 0 1 140 60Z' fill='#c9a24a'/><path d='M100 60L140 60A40 40 0 0 1 72 88Z' fill='#7a1f2b'/>",
+eye:"<path d='M30 60Q100 -4 170 60Q100 124 30 60Z'/><circle cx='100' cy='60' r='22' fill='#2f6b3a'/><circle cx='100' cy='60' r='9' fill='#111'/>",
+doc:"<rect x='56' y='14' width='78' height='96'/><path d='M68 34H122M68 50H122M68 66H104' stroke='#5b3a7a' stroke-width='5'/><rect x='110' y='70' width='46' height='34' fill='#c9a24a'/><path d='M118 88H148' stroke='#fff' stroke-width='4'/>"};
+const svg=n=>`<svg xmlns='http://www.w3.org/2000/svg' width='200' height='120' viewBox='0 0 200 120' preserveAspectRatio='xMidYMid slice'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='${I[n].c}'/><stop offset='1' stop-color='#1b150f'/></linearGradient></defs><rect width='200' height='120' fill='url(#g)'/><circle cx='170' cy='20' r='30' fill='#fff' opacity='.1'/><circle cx='20' cy='100' r='24' fill='#fff' opacity='.07'/><g fill='#fff8e8' stroke='#c9a24a' stroke-width='2'>${MO[IL[n]]}</g></svg>`;
+function ptex(it){const n=I.indexOf(it),c=document.createElement('canvas');c.width=512;c.height=320;const g=c.getContext('2d'),t=new THREE.CanvasTexture(c),im=new Image();let ok=0;
+const d=t.r=()=>{g.fillStyle='#fff8e8';g.fillRect(0,0,512,320);g.fillStyle=it.c;g.fillRect(0,0,512,175);if(ok)g.drawImage(im,0,0,512,175);
+g.font='600 18px Fredoka,sans-serif';g.fillStyle='#000b';g.fillRect(14,14,g.measureText(it.k).width+24,32);g.fillStyle='#ffd978';g.fillText(it.k,26,37);
+let z=32;do{g.font=`600 ${z--}px Fredoka,sans-serif`}while(g.measureText(it.t).width>470&&z>16);g.fillStyle='#2b2118';g.fillText(it.t,20,216);
+g.font='400 21px Nunito,sans-serif';g.fillStyle='#6b5a48';g.fillText(it.s,20,252);g.font='700 18px Nunito,sans-serif';g.fillStyle=it.c;g.fillText('Klik untuk membaca ▸',20,296);g.strokeStyle='#d4a64a';g.lineWidth=6;g.strokeRect(3,3,506,314);t.needsUpdate=true};
+im.onload=()=>{ok=1;d()};im.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg(n));d();return t}
+const PP=[[-6,-5.83,0,0],[6,-5.83,0,0],[-26.83,2,Math.PI/2,0],[-17,-5.83,0,0],[26.83,2,-Math.PI/2,0],[17,-5.83,0,0],[-4.5,-33.83,0,6],[4.5,-33.83,0,6],[9.17,-22.5,Math.PI/2,6],[14,-33.83,0,6],[22,-33.83,0,6],[14,-20.17,Math.PI,6],[22,-20.17,Math.PI,6],[26.83,-27,-Math.PI/2,6]];
+const hit=[];
+I.forEach((it,n)=>{const w=n==13?4.4:n>7?3.4:4.8,h=w/1.6,g=new THREE.Group(),q=PP[n];
+it.fm=M(0xd4a64a,{emissive:0x1a1204,metalness:.85,roughness:.32});
+add(B(w+.55,h+.55,.14),M(0x3b2314),0,0,0,g);add(B(w+.38,h+.38,.18),it.fm,0,0,.02,g);add(B(w+.16,h+.16,.2),M(0x5b1f1f),0,0,.04,g);
+[[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([a,b])=>add(new THREE.SphereGeometry(.13,10,8),it.fm,a*(w+.4)/2,b*(h+.4)/2,.14,g));
+const pm=add(PL(w,h),new THREE.MeshBasicMaterial({map:ptex(it),toneMapped:false}),0,0,.15,g);pm.userData.i=n;hit.push(pm);it.pm=pm;
+add(B(w*.45,.2,.04),it.fm,0,-h/2-.5,.1,g);add(B(.06,.5,.06),it.fm,0,h/2+.5,.28,g).rotation.x=Math.PI/2;add(B(w*.5,.1,.14),GL(0xfff2c9),0,h/2+.5,.55,g);
+add(new THREE.ConeGeometry(w*.55,h*.9,16,1,true),new THREE.MeshBasicMaterial({color:0xffe2a0,transparent:true,opacity:.07,side:2,depthWrite:false}),0,h*.05+.5,.6,g);
+g.position.set(q[0],q[3]+2.6,q[1]);g.rotation.y=q[2];S.add(g)});
+Promise.all(['600 30px Fredoka','400 20px Nunito','700 18px Nunito'].map(f=>document.fonts.load(f))).then(()=>I.forEach(it=>it.pm.material.map.r())).catch(()=>{});
+try{const cc=new THREE.CubeCamera(.1,80,128);cc.position.set(0,3,2);S.add(cc);cc.update(R,S);S.remove(cc);S.environment=new THREE.PMREMGenerator(R).fromCubemap(cc.renderTarget.texture).texture}catch(e){}
+
+// ---- halaman luar, fasad, pintu masuk, papan nama ruang
+const CD=new THREE.Color(0x1b150f),CS=new THREE.Color(0x8fc4ea),sun=new THREE.DirectionalLight(0xfff1d0,0);sun.position.set(10,30,40);S.add(sun);
+const dome=add(new THREE.SphereGeometry(100,24,16),new THREE.MeshBasicMaterial({side:1,transparent:true,opacity:0,depthWrite:false,fog:false,toneMapped:false,map:cv(8,128,g=>{const q=g.createLinearGradient(0,0,0,128);q.addColorStop(0,'#3d83c8');q.addColorStop(.55,'#9fd0f0');q.addColorStop(1,'#fbe8c4');g.fillStyle=q;g.fillRect(0,0,8,128)})}),0,0,0);dome.renderOrder=-1;
+const gr=cv(128,128,g=>{g.fillStyle='#4e8a3c';g.fillRect(0,0,128,128);nz(g,128,128,900,.1)});const gtx=tx(gr,40,40);
+add(PL(260,260),M(0xffffff,{map:gtx,roughness:1}),0,-.03,60).rotation.x=-Math.PI/2;
+add(PL(9,32),M(0xffffff,{map:tx(ft,4.5,16),roughness:.5}),0,.02,26).rotation.x=-Math.PI/2;
+add(PL(2.8,32),M(0xffffff,{map:tx(cp,2.4,28),roughness:1}),0,.04,26).rotation.x=-Math.PI/2;
+add(PL(34,6),M(0xffffff,{map:tx(ft,17,3),roughness:.5}),0,.02,13).rotation.x=-Math.PI/2;
+const stn=(w,h)=>M(0xe3d4b2,{map:tx(mb,w/3,h/3),roughness:.7});
+add(B(6.9,8.4,.3),stn(6.9,8.4),-5.85,4.2,10.25);add(B(6.9,8.4,.3),stn(6.9,8.4),5.85,4.2,10.25);add(B(4.8,4.8,.3),stn(4.8,4.8),0,6,10.25);
+[[-18.3],[18.3]].forEach(([x])=>{add(B(18,5.6,.3),stn(18,5.6),x,2.8,10.25);add(B(18.2,.3,.7),gm,x,5.7,10.4);[-5,0,5].forEach(d=>{add(B(2.4,3,.12),gm,x+d,2.9,10.45);add(PL(2.1,2.7),new THREE.MeshBasicMaterial({color:0xffe2a0}),x+d,2.9,10.52)})});
+[-5.8,5.8].forEach(x=>{add(B(2.4,3.6,.12),gm,x,4.2,10.45);add(PL(2.1,3.3),new THREE.MeshBasicMaterial({color:0xffe2a0}),x,4.2,10.52)});
+[-8.4,-6,-3.4,3.4,6,8.4].forEach(x=>{sh(x,0,12.6,1);add(B(1.1,.4,1.1),stn(1,1),x,.2,12.6);add(new THREE.CylinderGeometry(.42,.48,7,20),stn(1,3),x,3.9,12.6);add(B(1.2,.4,1.2),stn(1,1),x,7.6,12.6)});
+add(B(20,1,3.4),stn(20,1),0,8.1,11.8);add(B(20.4,.2,3.8),gm,0,8.65,11.8);
+const psh=new THREE.Shape();psh.moveTo(-10.2,0);psh.lineTo(10.2,0);psh.lineTo(0,3.4);psh.closePath();add(new THREE.ExtrudeGeometry(psh,{depth:3.4,bevelEnabled:false}),stn(20,3),0,8.75,10.1);
+add(PL(11,.8),new THREE.MeshBasicMaterial({toneMapped:false,map:cv(1024,76,g=>{g.fillStyle='#5a1420';g.fillRect(0,0,1024,76);g.strokeStyle='#d4a64a';g.lineWidth=5;g.strokeRect(3,3,1018,70);g.fillStyle='#ffd978';g.font='600 50px Fredoka,sans-serif';g.textAlign='center';g.fillText('MUSEUM PENELITIAN SOSIAL',512,56)})}),0,8.1,13.52);
+const dwd=M(0xffffff,{map:tx(wd,1,2),roughness:.5});
+const door=(sg)=>{const g=new THREE.Group();g.position.set(sg*2.2,0,10.05);S.add(g);add(B(2.2,3.6,.12),dwd,-sg*1.1,1.8,0,g);add(B(1.7,3,.14),M(0x4a2c17),-sg*1.1,1.8,0,g);add(new THREE.SphereGeometry(.09,10,8),gm,-sg*1.95,1.8,.1,g);return g};
+const DLg=door(-1),DRg=door(1);
+const tree=(x,z,h)=>{sh(x,0,z,1.4);add(new THREE.CylinderGeometry(.22,.3,h,8),M(0x5a3a22),x,h/2,z);[[0,h,0,1.5],[.5,h+.7,.2,1.1],[-.5,h+.6,-.2,1.2]].forEach(([a,b,c,r])=>add(new THREE.SphereGeometry(r,10,8),M(0x2f7a3a),x+a,b,z+c))};
+[[-11,17],[11,17],[-17,24],[17,24],[-11,31],[11,31],[-19,36],[19,36],[-24,15],[24,15]].forEach(([x,z],i)=>tree(x,z,2.4+i%3*.5));
+[-4.6,4.6].forEach(x=>[15,21,27,33].forEach(z=>{add(new THREE.CylinderGeometry(.06,.08,3.2,8),gm,x,1.6,z);add(new THREE.SphereGeometry(.25,10,8),gl,x,3.3,z);const p=new THREE.Sprite(new THREE.SpriteMaterial({map:gt,color:0xffd9a0,blending:THREE.AdditiveBlending,depthWrite:false,transparent:true,opacity:.7}));p.scale.set(2.6,2.6,1);p.position.set(x,3.3,z);S.add(p)}));
+[-6.5,6.5].forEach(x=>add(B(1,.8,22),M(0x2f6b3a),x,.4,26));
+const plq=(t,x,y,z,ry,c)=>{add(PL(4.4,.9),new THREE.MeshBasicMaterial({toneMapped:false,map:cv(512,104,g=>{g.fillStyle=c;g.fillRect(0,0,512,104);g.strokeStyle='#d4a64a';g.lineWidth=6;g.strokeRect(5,5,502,94);g.fillStyle='#fff8e8';g.font='600 40px Fredoka,sans-serif';g.textAlign='center';g.fillText(t,256,68)})}),x,y,z).rotation.y=ry};
+plq('RUANG LANGKAH',-8.8,5.2,2,Math.PI/2,'#8a5a14');plq('RUANG METODE',8.8,5.2,2,-Math.PI/2,'#1f4e8c');plq('LANTAI 2 · DATA',0,10.6,-19.8,0,'#2f6b3a');plq('RUANG KASUS',9.2,10.6,-27,-Math.PI/2,'#7a1f2b');
+[[0,-5.8,0],[0,-33.8,6],[18,-33.8,6],[-18,9.8,0],[18,9.8,0]].forEach(([x,z,y])=>{});
+// ---- audio
+let AC,MG,mus=1,voc=1,spk=0,sid=0,fc=0,cT='';
+function au(){if(!AC){AC=new(window.AudioContext||window.webkitAudioContext)();MG=AC.createGain();MG.gain.value=.5;MG.connect(AC.destination);startMus()}if(AC.state=='suspended')AC.resume()}
+function tn(f,d,v,ty,t0){const o=AC.createOscillator(),g=AC.createGain(),t=AC.currentTime+(t0||0);o.type=ty||'sine';o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.03);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(MG);o.start(t);o.stop(t+d+.05)}
+function startMus(){const sc=[261.6,293.7,329.6,392,440,523.3,587.3],ch=[[130.8,196,261.6],[110,164.8,220],[87.3,130.8,174.6],[98,146.8,196]];let b=0;setInterval(()=>{if(!mus||document.hidden)return;ch[b++%4].forEach(f=>tn(f,3.8,.05));for(let k=0;k<3;k++)tn(sc[Math.random()*7|0],2,.04,'triangle',k*.9+.2)},3000)}
+const chime=()=>{tn(880,1.2,.12);tn(1318,1.4,.08,'sine',.12)},stp=()=>tn(70+Math.random()*20,.12,.15,'triangle');
+const rdb=()=>$('#rd').textContent=spk?'⏹ Stop':'🔊 Dengarkan';
+function stopS(){sid++;speechSynthesis.cancel();spk=0;if(MG)MG.gain.value=.5;rdb()}
+let VL=[],vo=-1;const ldv=()=>{VL=speechSynthesis.getVoices()};ldv();
+const isid=v=>/^(id|in)[-_]/i.test(v.lang)||/indonesia/i.test(v.name);
+const idv=()=>vo>=0?VL[vo]:VL.find(isid);
+const showH=t=>{const h=$('#hint');h.style.display='block';h.textContent=t;clearTimeout(h.t);h.t=setTimeout(()=>h.style.display='none',8000)};
+function spk2(txt,my,n){ldv();if(!VL.length&&(n||0)<6)return setTimeout(()=>{if(my==sid)spk2(txt,my,(n||0)+1)},300);
+const v=idv();if(!v&&!warned){warned=1;showH('Suara Bahasa Indonesia belum terpasang di perangkat ini. Pasang lewat Pengaturan > Teks-ke-ucapan > Bahasa Indonesia, atau buka halaman ini di Chrome. Tekan tombol 🌐 untuk memilih suara.')}
+const parts=(txt.replace(/\s+/g,' ').match(/[^.!?:;]+[.!?:;]*/g)||[txt]).map(s=>s.trim()).filter(Boolean);
+parts.forEach((s,k)=>{const u=new SpeechSynthesisUtterance(s);u.lang=v?v.lang:'id-ID';u.rate=.95;if(v)u.voice=v;
+if(k==0)u.onstart=()=>{if(my!=sid)return;spk=1;if(MG)MG.gain.value=.15;rdb()};
+u.onend=u.onerror=()=>{if(my!=sid)return;if(k==parts.length-1){spk=0;if(MG)MG.gain.value=.5;rdb()}};speechSynthesis.speak(u)})}
+let warned=0;speechSynthesis.onvoiceschanged=ldv;
+function say(txt){stopS();if(voc&&txt)spk2(txt,sid)}
+function oldsay(txt){stopS();if(!voc||!txt)return;const my=sid,u=new SpeechSynthesisUtterance(txt);u.lang='id-ID';u.rate=.95;const v=idv();if(v){u.voice=v;u.lang=v.lang}else if(!warned){warned=1;const h=$('#hint');h.style.display='block';h.textContent='Suara Bahasa Indonesia belum terpasang di perangkat ini. Pasang lewat Pengaturan > Teks-ke-ucapan (Text-to-speech) > Bahasa Indonesia.';setTimeout(()=>h.style.display='none',9000)}u.onstart=()=>{if(my!=sid)return;spk=1;if(MG)MG.gain.value=.15;rdb()};u.onend=u.onerror=()=>{if(my!=sid)return;spk=0;if(MG)MG.gain.value=.5;rdb()};speechSynthesis.speak(u)}
+addEventListener('pointerdown',au,{once:true});
+$('#rd').onclick=()=>spk?stopS():say(cT);
+$('#bl').onclick=()=>{ldv();const ix=VL.map((v,i)=>i).filter(i=>isid(VL[i])),pool=ix.length?ix:VL.map((v,i)=>i);if(!pool.length){showH('Perangkat ini tidak melaporkan daftar suara. Pasang suara Bahasa Indonesia di Pengaturan > Teks-ke-ucapan.');return}vo=pool[(pool.indexOf(vo)+1)%pool.length];const v=VL[vo];showH('Suara: '+v.name+' ('+v.lang+')'+(isid(v)?'':' – bukan Bahasa Indonesia'));voc=1;$('#bv').classList.remove('off');say('Halo, ini suara Bahasa Indonesia untuk museum penelitian sosial.')};
+$('#bm').onclick=e=>{au();mus=!mus;e.currentTarget.classList.toggle('off',!mus)};
+$('#bv').onclick=e=>{voc=!voc;e.currentTarget.classList.toggle('off',!voc);if(!voc)stopS()};
+// ---- controls
+let yaw=0,pit=0,tg=null,cy=0,intro=1,dr=0;const P=cam.position,keys={},vis=new Set(),ray=new THREE.Raycaster(),fd=$('#fd');P.set(0,1.7,36);
+function go(i){intro=0;$('#intro').style.display='none';fd.style.opacity=1;setTimeout(()=>{P.set(ST[i][0],ST[i][2]+1.7,ST[i][1]);cy=ST[i][2];yaw=ST[i][3];pit=0;fd.style.opacity=0},380)}
+const nav=$('#nav');NM.forEach((n,i)=>{const b=document.createElement('button');b.className='chip';b.textContent=n;b.onclick=()=>go(i);nav.appendChild(b)});
+const km={w:'u',ArrowUp:'u',s:'d',ArrowDown:'d',a:'l',ArrowLeft:'l',d:'r',ArrowRight:'r'};
+addEventListener('keydown',e=>{if($('#m').style.display=='flex'){if(e.key=='Escape')cls();return}const k=km[e.key];if(k){keys[k]=1;tg=null}});
+addEventListener('keyup',e=>{const k=km[e.key];if(k)keys[k]=0});
+document.querySelectorAll('#pad button').forEach(b=>{const k=b.dataset.k;b.onpointerdown=()=>{keys[k]=1;tg=null};b.onpointerup=b.onpointerleave=()=>keys[k]=0});
+const c0=$('#c');let dn=null;
+c0.onpointerdown=e=>{dn={x:e.clientX,y:e.clientY,m:0};c0.setPointerCapture(e.pointerId)};
+c0.onpointermove=e=>{if(!dn)return;const dx=e.clientX-dn.x,dy=e.clientY-dn.y;dn.m+=Math.abs(dx)+Math.abs(dy);yaw+=dx*.005;pit=Math.max(-1,Math.min(1,pit+dy*.005));dn.x=e.clientX;dn.y=e.clientY};
+c0.onpointerup=e=>{if(dn&&dn.m<8){ray.setFromCamera({x:e.clientX/innerWidth*2-1,y:-e.clientY/innerHeight*2+1},cam);const h=ray.intersectObjects(hit)[0];if(h)open(h.object.userData.i)}dn=null};
+function open(i){const it=I[i];au();chime();$('#mc').innerHTML=`<div class='ill'>${svg(i)}</div>`+it.h;$('#m').style.display='flex';$('#rd').style.display='';if(it.cf){CUR=it.cf;if(CURID!=CUR.id){const a=DR.nm,b=DR.kl;for(const k in DR)delete DR[k];DR.nm=a;DR.kl=b;CURID=CUR.id}dRest()}cT=it.cf?it.t+'. Baca empat bukti lalu kerjakan lembar analisis.':it.t+'. '+$('#mc').innerText;say(cT);$('.card').scrollTop=0;if(!vis.has(i)){vis.add(i);it.fm.color.set(0x5aa05a);$('#pr').textContent=`Dikunjungi ${vis.size}/${I.length}`}const hh=$('#hint');if(!hh.t)hh.style.display='none';for(const k in keys)keys[k]=0}
+function cls(){$('#m').style.display='none';stopS()}$('#x').onclick=cls;$('#m').onclick=e=>{if(e.target.id=='m')cls()};
+const WK=[[-14,14,10.3,40,0],[-2.1,2.1,9.3,10.4,0],[-8.7,8.7,-5.7,9.7,0],[-9.6,-8.4,.4,3.6,0],[-26.7,-9.3,-5.7,9.7,0],[8.4,9.6,.4,3.6,0],[9.3,26.7,-5.7,9.7,0],[-2.6,2.6,-20.3,-5.7,'s'],[-8.7,8.7,-33.7,-20.3,6],[8.4,9.6,-28.6,-25.4,6],[9.3,26.7,-33.7,-20.3,6]];
+const fl=(x,z)=>{for(const r of WK)if(x>r[0]&&x<r[1]&&z>r[2]&&z<r[3])return r[4]=='s'?Math.max(0,Math.min(6,.3*(Math.floor((-6-z)/.7)+1))):r[4];return null};
+(function loop(){requestAnimationFrame(loop);
+const k=Math.max(0,Math.min(1,(P.z-8)/4));S.background.copy(CD).lerp(CS,k);S.fog.color.copy(S.background);S.fog.near=16+k*40;S.fog.far=52+k*70;sun.intensity=k*1.1;dome.material.opacity=k;dome.position.copy(P);dr+=((Math.abs(P.x)<6&&P.z<19&&P.z>3?1:0)-dr)*.06;DLg.rotation.y=dr*1.5;DRg.rotation.y=-dr*1.5;
+if(intro){keys.u=1;if(P.z<5.5){intro=0;keys.u=0;$('#intro').style.display='none'}}
+const f=(keys.u?1:0)-(keys.d?1:0),sd=(keys.r?1:0)-(keys.l?1:0),dx=(-Math.sin(yaw)*f+Math.cos(yaw)*sd)*.09,dz=(-Math.cos(yaw)*f-Math.sin(yaw)*sd)*.09;
+if(fl(P.x+dx,P.z+dz)!==null){P.x+=dx;P.z+=dz}else if(fl(P.x+dx,P.z)!==null)P.x+=dx;else if(fl(P.x,P.z+dz)!==null)P.z+=dz;
+const y=fl(P.x,P.z);if(y!==null)cy+=(y-cy)*.2;P.y=cy+1.7;
+const cur=P.z>10.3?5:P.y>4?(P.x>9?4:3):P.x<-9?1:P.x>9?2:0;[...nav.children].forEach((b,i)=>b.classList.toggle('on',i==cur));
+if(mus&&AC&&(f||sd)&&++fc%28==0)stp();
+cam.rotation.set(pit,yaw,0,'YXZ');art.forEach(o=>o.rotation.y+=.01);R.render(S,cam)})();
+</script><!-- ===== TAMBAHAN 1-5: kelola kasus, akses guru, skor khusus guru, gambar asli, foto bukti siswa ===== -->
+<style>
+.ill img{display:block;width:100%;max-height:230px;object-fit:cover}
+.gtb{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.gtb .go{margin:0;padding:6px 11px;font-size:13px}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}.fgrid img{display:block;width:100%;height:100px;object-fit:cover;border-radius:6px;cursor:zoom-in}
+.ed label{display:block;margin:8px 0 2px;font-weight:700;font-size:13px}.card input[type=file]{width:100%;margin:4px 0;font-size:13px}
+</style>
+<script id="paket-guru" type="application/json">null</script>
+<script>
+(()=>{
+const K_P='mpsPaket',K_F='mpsFoto',OPT=['Observasi','Wawancara','Kuesioner','Studi dokumen','FGD'];
+const jp=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}};
+const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));return 1}catch(e){showH('Penyimpanan perangkat penuh. Kurangi jumlah/ukuran foto.');return 0}};
+const okImg=u=>/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(u||'');
+const B0=(()=>{try{return JSON.parse(gE('paket-guru').textContent)||{}}catch(e){return{}}})(),L0=jp(K_P,{});
+const PK={kasus:{...B0.kasus,...L0.kasus},gambar:{...B0.gambar,...L0.gambar},pin:L0.pin||B0.pin||''};
+const persist=()=>sv(K_P,PK);
+const dbSet=(p,o)=>{if(DB)DB.doc('paket/'+p).set(o).then(()=>showH('✓ Tersinkron ke semua siswa'),()=>showH('Gagal sinkron. Gunakan Unduh file / Kode Kasus.'))};
+const dbDel=p=>{if(DB){const d=DB.doc('paket/'+p);d.delete&&d.delete()}};
+const CF=id=>id=='kantin'?KAN:CASES.find(c=>c.id==id),IX=id=>I.findIndex(x=>x.cf&&x.cf.id==id);
+const san=h=>{const t=document.createElement('template');t.innerHTML=h;t.content.querySelectorAll('script,iframe,object,embed,style,link,meta').forEach(n=>n.remove());t.content.querySelectorAll('*').forEach(n=>[...n.attributes].forEach(a=>{if(/^on/i.test(a.name)||/^\s*javascript:/i.test(a.value))n.removeAttribute(a.name)}));return t.innerHTML};
+const ev2h=s=>san(s.split('\n').map(l=>{const m=l.match(/^\[bar\]\s*(.+?)\s*\|\s*(\d{1,3})\s*%?\s*$/);return m?bar(m[1],Math.min(100,+m[2])):l}).join('\n').replace(/\n/g,'<br>'));
+const kw=s=>{const a=String(s).split('|').map(x=>x.trim()).filter(Boolean).map(x=>x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'));return a.length?new RegExp(a.join('|'),'i'):/$^/};
+const src=r=>r.source.replace(/\\b|[()]/g,'');
+const snap=c=>({t:c.t,sc:c.sc,st:c.st,ev:c.ev.map(e=>e.slice()),T:c.T.slice(),P:c.P,tp:c.tp,E:c.E,pb:c.pb,pm:c.pm,ph:c.ph});
+const OR={};IDS.forEach(id=>OR[id]=snap(CF(id)));
+const PMH={kuan:[CASES[0].pm,CASES[0].ph],kual:[CASES[2].pm,CASES[2].ph],campuran:[KAN.pm,KAN.ph]};
+// ---------- gambar panel (3D + modal)
+function paint(i){const t=I[i].pm.material.map;if(!t.r0){t.r0=t.r;t.r=()=>{t.r0();ph(i)}}t.r()}
+function ph(i){const u=PK.gambar[i];if(!u||!okImg(u.u))return;const it=I[i],t=it.pm.material.map,g=t.image.getContext('2d'),m=new Image();m.onload=()=>{const s=Math.max(512/m.width,175/m.height),w=m.width*s,h=m.height*s;g.save();g.beginPath();g.rect(0,0,512,175);g.clip();g.drawImage(m,(512-w)/2,(175-h)/2,w,h);g.restore();g.font='600 18px Fredoka,sans-serif';g.fillStyle='#000b';g.fillRect(14,14,g.measureText(it.k).width+24,32);g.fillStyle='#ffd978';g.fillText(it.k,26,37);t.needsUpdate=true};m.src=u.u}
+const _o=open;open=function(i){_o(i);const g=PK.gambar[i],il=$('#mc .ill');if(g&&il&&okImg(g.u))il.innerHTML=`<img src="${g.u}" alt="">`+(g.c?`<div style="font-size:12px;padding:4px 8px;background:#f3e9d0;color:#5a3a22">${esH(g.c)}</div>`:'')};
+// ---------- kasus
+function touch(id){const c=CF(id),i=IX(id);I[i].t=c.t.replace(/^Kasus \d \(\w+\): /,'Kasus: ');I[i].s=c.sc;paint(i)}
+function apply(id,d){const c=CF(id),L=String(d.kw||'').split('\n');Object.assign(c,{t:String(d.t).replace(/[<>]/g,''),sc:String(d.sc).replace(/[<>]/g,''),st:san(d.st),ev:d.ev.map(e=>[String(e[0]).replace(/[<>]/g,''),ev2h(e[1])]),T:d.T,P:d.P,pb:String(d.pb).split('\n').filter(x=>x.trim()).map(x=>'<li>'+san(x)+'</li>').join(''),tp:(L[0]||'').split(';').filter(x=>x.trim()).map(kw),E:[1,2,3,4].map(i=>kw(L[i]||'')),pm:PMH[d.P][0],ph:PMH[d.P][1]});touch(id)}
+const rest=id=>{Object.assign(CF(id),OR[id]);touch(id)};
+function applyAll(){IDS.forEach(id=>{try{PK.kasus[id]?apply(id,PK.kasus[id]):rest(id)}catch(e){rest(id)}});I.forEach((_,i)=>{if(PK.gambar[i])paint(i)})}
+applyAll();
+// ---------- sinkron server (jika terhubung)
+let SUB=0;setInterval(()=>{if(DB&&!SUB){SUB=1;DB.collection('paket').onSnapshot(q=>{const G={};let K=null;q.docs.forEach(d=>{const r=d.data()||{};if(r.t=='g'&&okImg(r.u))G[r.i]={u:r.u,c:r.c||''};if(r.t=='kasus')try{K=JSON.parse(r.v)}catch(e){}if(r.t=='pin')PK.pin=r.h||''});PK.gambar={...B0.gambar,...G};PK.kasus=K||{...B0.kasus};applyAll();I.forEach((_,i)=>{if(!PK.gambar[i])paint(i)})},()=>{})}},1000);
+// ---------- delegasi klik/ubah di modal
+const mc=$('#mc'),A={};
+mc.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b&&A[b.dataset.a])A[b.dataset.a](b,e)});
+mc.addEventListener('change',e=>{const b=e.target.closest('[data-c]');if(b&&A[b.dataset.c])A[b.dataset.c](b,e)});
+async function shrink(f,mx,q){let m,w,h;try{m=await createImageBitmap(f,{imageOrientation:'from-image'});w=m.width;h=m.height}catch(e){m=await new Promise((ok,no)=>{const i=new Image(),u=URL.createObjectURL(f);i.onload=()=>{URL.revokeObjectURL(u);ok(i)};i.onerror=()=>no(new Error('format'));i.src=u});w=m.naturalWidth||m.width;h=m.naturalHeight||m.height}
+const s=Math.min(1,mx/Math.max(w,h)),c=document.createElement('canvas');c.width=Math.max(1,Math.round(w*s));c.height=Math.max(1,Math.round(h*s));const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(m,0,0,c.width,c.height);const u=c.toDataURL('image/jpeg',q);if(m.close)m.close();if(!okImg(u))throw new Error('canvas');return u}
+const imgErr=e=>'Foto gagal dibaca: '+(e&&e.message=='format'?'format tidak didukung (mis. HEIC). Ubah ke JPG/PNG atau ambil foto langsung dengan kamera.':'ukuran terlalu besar / memori kurang. Coba foto lain.');
+// ---------- 2. akses guru: PIN kustom (hash) + toolbar
+const hs=async s=>window.crypto&&crypto.subtle?[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode('mps|'+s)))].map(b=>b.toString(16).padStart(2,'0')).join(''):'x'+btoa(unescape(encodeURIComponent('mps|'+s)));
+tLogin=async function(){const v=gE('pn').value,ok=PK.pin?(await hs(v))===PK.pin:v===PIN_GURU;if(ok)tDash();else gE('pe').innerHTML='<div class="box">PIN salah.</div>'};
+let act='',FS=0,FR=[];
+$('#bt').onclick=()=>{act='';tOpen()};
+const _td=tDash,TB=`<div class="gtb">${[['gskor','📊 Skor'],['gkasus','✏️ Kasus'],['gfoto','📷 Foto Siswa'],['ggbr','🖼 Gambar'],['gset','🔑 Pengaturan']].map(x=>`<button class="go" data-a="${x[0]}">${x[1]}</button>`).join('')}</div><div id="gtl"></div>`;
+tDash=function(){if(act)return;fsub();_td();const m=$('#mc'),w=document.createElement('div');w.id='gdash';while(m.firstChild)w.appendChild(m.firstChild);m.insertAdjacentHTML('beforeend',TB);m.appendChild(w)};
+function tool(n){act=n;if(!n){tDash();return}gE('gdash').style.display='none';({kasus:tKas,foto:tFoto,gbr:tImg,set:tSet})[n]();$('.card').scrollTop=0}
+A.gskor=()=>tool('');A.gkasus=()=>tool('kasus');A.gfoto=()=>tool('foto');A.ggbr=()=>tool('gbr');A.gset=()=>tool('set');
+// ---------- 1. kelola kasus
+const ed=(id,l,v,r)=>`<label>${l}</label>${r?`<textarea id="${id}" rows="${r}">${esH(v)}</textarea>`:`<input type="text" id="${id}" value="${esH(v)}">`}`;
+const sel=(id,o,v)=>`<select id="${id}">${o.map(x=>{const a=[].concat(x);return`<option value="${a[0]}"${a[0]==v?' selected':''}>${a[a.length-1]}</option>`}).join('')}</select>`;
+const cur=id=>{const c=CF(id);return{t:c.t,sc:c.sc,st:c.st,ev:c.ev.map(e=>[e[0],e[1]]),T:c.T.slice(),P:c.P,kw:[c.tp.map(src).join(' ; ')].concat(c.E.map(src)).join('\n'),pb:c.pb.replace(/<\/li>/g,'\n').replace(/<li>/g,'').trim()}};
+function tKas(id){id=id||IDS[0];const d=cur(id);gE('gtl').innerHTML=`<div class="ed"><h3>✏️ Kelola Kasus</h3><select data-c="kpilih">${IDS.map(x=>`<option value="${x}"${x==id?' selected':''}>${esH(ABS[x]+' – '+CF(x).t)}</option>`).join('')}</select><p><small>Ubah isi lalu tekan Simpan. Boleh HTML sederhana (&lt;b&gt;, &lt;ul&gt;, &lt;table&gt;). Diagram batang: tulis satu baris <code>[bar] Judul | 70</code>. Baris baru otomatis jadi pindah baris.</small></p>${ed('e_t','Judul kasus',d.t)}${ed('e_sc','Sekolah / lokasi',d.sc)}${ed('e_st','Cerita kasus',d.st,4)}${[0,1,2,3].map(i=>ed('e_et'+i,'Bukti '+'ABCD'[i]+' – judul',d.ev[i][0])+ed('e_ev'+i,'Bukti '+'ABCD'[i]+' – isi',d.ev[i][1],3)+'<label>Teknik yang benar untuk bukti '+'ABCD'[i]+'</label>'+sel('e_T'+i,OPT,d.T[i])).join('')}<label>Pendekatan yang benar</label>${sel('e_P',[['kuan','Kuantitatif'],['kual','Kualitatif'],['campuran','Gabungan']],d.P)}${ed('e_kw','Kata kunci penilaian otomatis (pisahkan dengan |). Baris 1 = topik (beberapa kelompok dipisah ;). Baris 2–5 = bukti A–D',d.kw,5)}${ed('e_pb','Contoh pembahasan (satu poin per baris)',d.pb,6)}<button class="go" data-a="ksimpan" data-id="${id}">💾 Simpan</button> <button class="go" style="background:#555" data-a="kreset" data-id="${id}">↺ Kembalikan bawaan</button></div>`}
+A.kpilih=b=>tKas(b.value);
+A.ksimpan=b=>{const id=b.dataset.id,v=i=>gE(i).value,d={t:v('e_t').trim()||CF(id).t,sc:v('e_sc'),st:v('e_st'),ev:[0,1,2,3].map(i=>[v('e_et'+i),v('e_ev'+i)]),T:[0,1,2,3].map(i=>v('e_T'+i)),P:v('e_P'),kw:v('e_kw'),pb:v('e_pb')};PK.kasus[id]=d;apply(id,d);persist();dbSet('kasus',{t:'kasus',v:JSON.stringify(PK.kasus)});showH('✓ Kasus disimpan')};
+A.kreset=b=>{const id=b.dataset.id;delete PK.kasus[id];rest(id);persist();dbSet('kasus',{t:'kasus',v:JSON.stringify(PK.kasus)});tKas(id);showH('Kasus dikembalikan ke bawaan')};
+// ---------- 4. gambar asli per topik & kasus
+function tImg(){gE('gtl').innerHTML=`<h3>🖼 Gambar asli per topik & kasus</h3><p><small>Unggah foto asli untuk tiap panel. Tampil di panel 3D dan di dalam kartu. Isi keterangan/sumber foto. Foto otomatis dikecilkan.</small></p>`+I.map((it,i)=>{const g=PK.gambar[i];return`<div class="box"><b>${i+1}. ${esH(it.t)}</b><br>${g?`<img src="${g.u}" style="height:60px;border-radius:4px"><br>`:''}<input type="file" accept="image/*" data-c="gimg" data-i="${i}"><input type="text" placeholder="Keterangan / sumber foto" value="${esH(g?g.c:'')}" data-c="gcap" data-i="${i}">${g?`<button class="go" data-a="gdel" data-i="${i}">Hapus gambar</button>`:''}</div>`}).join('')}
+A.gimg=async b=>{const i=+b.dataset.i,f=b.files[0];if(!f)return;let u;try{u=await shrink(f,800,.7)}catch(e){showH(imgErr(e));return}try{PK.gambar[i]={u,c:(PK.gambar[i]||{}).c||''};if(persist()){dbSet('g'+i,{t:'g',i,u,c:PK.gambar[i].c});paint(i)}tImg()}catch(e){showH('Foto terbaca tetapi gagal disimpan: '+(e&&e.message||e))}};
+A.gcap=b=>{const i=+b.dataset.i;if(!PK.gambar[i])return;PK.gambar[i].c=b.value;persist();dbSet('g'+i,{t:'g',i,u:PK.gambar[i].u,c:b.value})};
+A.gdel=b=>{const i=+b.dataset.i;delete PK.gambar[i];persist();dbDel('g'+i);paint(i);tImg()};
+// ---------- 5. siswa kirim foto bukti nyata
+const _sh=sheet;
+sheet=c=>_sh(c)+`<hr><h3>📷 Bukti Nyata di Lingkunganmu</h3><div class="box">Foto kondisi/kejadian di sekitarmu (sekolah, rumah, lingkungan) yang berkaitan dengan kasus ini. <b>Jangan</b> memotret wajah orang tanpa izin; samarkan identitas. Isi Nama & Kelas di atas dulu.</div><input type="file" id="fi" accept="image/*" multiple><input type="text" id="fc" maxlength="140" placeholder="Keterangan: apa, di mana, kapan"><button class="go" data-a="fkirim">📤 Kirim Foto ke Guru</button><div id="fl"></div>`;
+function flist(id,nm,kl){const L=jp(K_F,[]).filter(x=>x.id==id&&x.n==nm&&x.k==kl);const e=gE('fl');if(e)e.innerHTML=L.length?'<small>Foto yang sudah kamu kirim:</small><div class="fgrid">'+L.map(x=>`<div><img src="${x.th}" style="height:70px"><small>${esH(x.st)}</small></div>`).join('')+'</div>':''}
+A.fkirim=async b=>{const nm=gE('nm').value.trim(),kl=gE('kl').value.trim(),F=[...gE('fi').files].slice(0,4),cap=gE('fc').value.trim(),id=CUR.id;
+if(!nm||!kl){showH('Isi Nama dan Kelas dulu di bagian atas lembar.');gE('nm').focus();return}
+if(!F.length){showH('Pilih foto dulu (maksimal 4 foto sekali kirim).');return}
+b.disabled=1;b.textContent='Memproses…';const out=[];let bad='';
+for(const x of F){try{out.push({id,n:nm,k:kl,cap,d:await shrink(x,720,.65),th:await shrink(x,120,.6),w:Date.now()+out.length})}catch(e){bad=imgErr(e)}}
+let st='';
+if(!out.length)st=bad;
+else if(DB&&UID){let n=0;for(const r of out){try{await DB.doc('foto/'+String(UID).replace(/\W/g,'')+'_'+r.w).set({u:String(UID),id:r.id,n:r.n,k:r.k,cap:r.cap,d:r.d,w:r.w});n++}catch(e){}}st=n==out.length?'✓ Terkirim':'Sebagian gagal'}
+else{const fs=await Promise.all(out.map(async r=>new File([await(await fetch(r.d)).blob()],`bukti_${ABS[id]}_${r.n}_${r.w}.jpg`,{type:'image/jpeg'})));
+if(navigator.canShare&&navigator.canShare({files:fs})){try{await navigator.share({files:fs,text:`Bukti nyata ${ABS[id]} – ${nm} (${kl}). ${cap}`});st='✓ Dibagikan'}catch(e){st='Dibatalkan'}}else{fs.forEach(f=>{const a=document.createElement('a');a.href=URL.createObjectURL(f);a.download=f.name;document.body.appendChild(a);a.click();a.remove()});st='Terunduh – kirim file ke guru'}}
+sv(K_F,jp(K_F,[]).concat(out.map(r=>({id,n:nm,k:kl,th:r.th,st}))).slice(-40));showH(st=='✓ Terkirim'?'✓ Foto terkirim ke guru':st);gE('fi').value='';b.disabled=0;b.textContent='📤 Kirim Foto ke Guru';flist(id,nm,kl)};
+// guru melihat foto
+function fsub(){if(DB&&!FS){FS=1;DB.collection('foto').onSnapshot(q=>{FR=q.docs.map(d=>d.data()).filter(r=>r&&r.n&&okImg(r.d));if(act=='foto')tFoto(gE('ff')?gE('ff').value:'')},()=>{})}}
+function tFoto(f){f=f||'';const L=FR.filter(r=>!f||r.id==f).sort((a,b)=>b.w-a.w);gE('gtl').innerHTML=`<h3>📷 Foto Bukti dari Siswa</h3><small>${DB?'🟢 Foto masuk otomatis.':'⚪ Tanpa koneksi: foto dikirim siswa lewat WhatsApp / berbagi file.'}</small><br><select id="ff" data-c="ffil"><option value="">Semua kasus</option>${IDS.map(x=>`<option value="${x}"${x==f?' selected':''}>${ABS[x]}</option>`).join('')}</select> <b>${L.length}</b> foto<div class="fgrid">${L.map(r=>`<div class="box" style="margin:0;padding:6px"><img src="${r.d}" data-a="zoom"><small><b>${esH(r.n)}</b> (${esH(r.k)}) · ${esH(ABS[r.id]||'')}<br>${esH(r.cap||'')}<br>${new Date(r.w).toLocaleString('id-ID')} <a href="${r.d}" download="bukti_${esH(r.n)}_${r.w}.jpg">⬇</a></small></div>`).join('')||'<p>Belum ada foto.</p>'}</div>`}
+A.ffil=b=>tFoto(b.value);A.zoom=b=>{const z=b.style.height=='auto';b.style.height=z?'100px':'auto';b.parentNode.style.gridColumn=z?'':'1/-1'};
+// ---------- pengaturan guru
+const kode=()=>'MPSK:'+btoa(unescape(encodeURIComponent(JSON.stringify(PK.kasus))));
+function tSet(){gE('gtl').innerHTML=`<h3>🔑 Pengaturan Guru</h3><div class="box"><b>Ganti PIN guru</b> (min. 6 karakter). ${PK.pin?'PIN kustom aktif.':'<b>Saat ini masih PIN bawaan – segera ganti agar siswa tidak bisa membuka skor.</b>'}<input type="password" id="np" placeholder="PIN baru"><button class="go" data-a="gpin">Simpan PIN</button></div><div class="box"><b>Bagikan perubahan ke siswa</b><br><small>${DB?'🟢 Terhubung: kasus, gambar & PIN otomatis tersinkron ke semua siswa.':'⚪ Tanpa koneksi: unduh file museum baru lalu bagikan ke siswa.'}</small><br><button class="go" data-a="gexp">⬇ Unduh file museum (kasus, gambar & PIN tertanam)</button><br><small>Kode kasus (cadangan / pindah perangkat):</small><textarea id="kd" rows="2">${kode()}</textarea><button class="go" data-a="gcopy">📋 Salin</button> <button class="go" data-a="gload">Muat kode di atas</button></div>`}
+A.gpin=async()=>{const v=gE('np').value;if(v.length<6){showH('PIN minimal 6 karakter.');return}PK.pin=await hs(v);persist();dbSet('pin',{t:'pin',h:PK.pin});showH('✓ PIN diganti');tSet()};
+A.gcopy=()=>{const e=gE('kd');e.select();try{document.execCommand('copy');showH('Kode disalin.')}catch(x){}};
+A.gload=()=>{try{const t=gE('kd').value.trim().replace(/^MPSK:/,''),o=JSON.parse(decodeURIComponent(escape(atob(t))));Object.keys(o).forEach(k=>{if(!IDS.includes(k))throw 0});PK.kasus=o;persist();dbSet('kasus',{t:'kasus',v:JSON.stringify(o)});applyAll();showH('✓ Kode dimuat')}catch(e){showH('Kode tidak valid.')}};
+A.gexp=async()=>{try{const h=await(await fetch(location.href.split('#')[0])).text(),o=h.replace(/(<script id="paket-guru" type="application\/json">)[\s\S]*?(<\/script>)/,(m,a,z)=>a+JSON.stringify(PK).replace(/</g,'\\u003c')+z),a=document.createElement('a');a.href=URL.createObjectURL(new Blob([o],{type:'text/html'}));a.download='museum-penelitian-sosial.html';document.body.appendChild(a);a.click();a.remove()}catch(e){showH('File sumber tidak terbaca (buka lewat hosting, bukan file lokal). Pakai Salin Kode Kasus.')}};
+// ---------- 3. skor hanya untuk guru
+const _chk=chk;
+chk=function(){_chk();const R=gE('res');if(!R||!R.querySelector('.big'))return;
+for(const n of [...R.childNodes]){if(n.nodeType==1&&n.classList.contains('box')&&/^Catatan:/.test(n.textContent)){n.innerHTML='<b>Jawabanmu sudah tersimpan.</b> Nilai hanya dapat dilihat oleh guru, dan guru akan membaca jawabanmu langsung. Kerjakan kasus lain di panel emas ruang kasus.';break}n.remove()}
+R.querySelectorAll('.box').forEach(n=>{if(/Pemetaan teknik/.test(n.textContent))n.innerHTML=n.innerHTML.replace(/Pemetaan teknik: \d\/4 benar\./,'Pemetaan teknik sudah diperiksa (hijau = tepat, merah = periksa lagi).')});
+WAHEAD=WAHEAD.replace(/Skor Akhir: \d+\/100\n/,'')};
+})();
+</script>
+</body></html>
